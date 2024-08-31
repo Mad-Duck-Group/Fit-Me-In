@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GridManager : MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class GridManager : MonoBehaviour
             return _instance;
         }
     }
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    [FormerlySerializedAs("width")] [SerializeField] private int column;
+    [FormerlySerializedAs("height")] [SerializeField] private int row;
     [SerializeField] private int cellSize;
     [SerializeField] private Vector2 offset;
     [SerializeField] private GameObject cellPrefab;
@@ -31,10 +32,10 @@ public class GridManager : MonoBehaviour
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    /// <returns>Cell</returns>
+    /// <returns>A Cell if it exists, null otherwise</returns>
     public Cell GetCellByIndex(int x, int y)
     {
-        if (x < 0 || x >= width || y < 0 || y >= height)
+        if (x < 0 || x >= row || y < 0 || y >= column)
         {
             return null;
         }
@@ -45,11 +46,11 @@ public class GridManager : MonoBehaviour
     /// Get the cell by position, it will be rounded to the nearest cell
     /// </summary>
     /// <param name="position">Position to try to get a cell</param>
-    /// <returns>Cell</returns>
+    /// <returns>A Cell if it exists, null otherwise</returns>
     public Cell GetCellByPosition(Vector3 position)
     {
-        int x = Mathf.RoundToInt((position.x - offset.x) / cellSize);
-        int y = Mathf.RoundToInt((position.y - offset.y) / cellSize);
+        int x = Mathf.RoundToInt((offset.y - position.y) / cellSize);
+        int y = Mathf.RoundToInt((position.x - offset.x) / cellSize);
         return GetCellByIndex(x, y);
     }
     
@@ -68,12 +69,12 @@ public class GridManager : MonoBehaviour
     /// </summary>
     private void CreateGrid()
     {
-        _cellArray = new Cell[width, height];
-        for (int x = 0; x < width; x++)
+        _cellArray = new Cell[row, column];
+        for (int x = 0; x < row; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < column; y++)
             {
-                Vector3 spawnPosition = offset + new Vector2(x, y) * cellSize;
+                Vector3 spawnPosition = offset + new Vector2(y, -x) * cellSize;
                 _cellArray[x, y] = Instantiate(cellPrefab, spawnPosition, Quaternion.identity).GetComponent<Cell>();
                 _cellArray[x, y].transform.localScale = Vector3.one * cellSize;
                 _cellArray[x, y].name = "Cell " + x + ", " + y;
@@ -198,7 +199,8 @@ public class GridManager : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Vector3 realCenter = new Vector3(width, height) * cellSize * 0.5f;
-        Gizmos.DrawWireCube((realCenter + (Vector3)offset) - transform.localScale * 0.5f, new Vector3(width * cellSize, height * cellSize, 1));
+        Vector3 realCenter = new Vector3(column, -row) * cellSize * 0.5f;
+        Vector3 halfSize = new Vector3(-cellSize, cellSize, 1) * 0.5f;
+        Gizmos.DrawWireCube((realCenter + (Vector3)offset) + halfSize, new Vector3(column * cellSize, row * cellSize, 1));
     }
 }
