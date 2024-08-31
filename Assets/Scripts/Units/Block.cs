@@ -35,7 +35,7 @@ public class Block : MonoBehaviour
     /// <summary>
     /// Generate the schema of the block, 1 is an atom, 0 is empty
     /// </summary>
-    private void GenerateSchema()
+    public void GenerateSchema()
     {
         Atom[] sortByX = Atoms.OrderByDescending(atom => atom.transform.position.x).ToArray();
         Atom[] sortByY = Atoms.OrderByDescending(atom => atom.transform.position.y).ToArray();

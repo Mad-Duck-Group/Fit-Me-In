@@ -218,6 +218,10 @@ public class GridManager : MonoBehaviour
         CreateVacantSchema();
         foreach (var block in blockPrototypes)
         {
+            if (block.BlockSchemas[0] == null)
+            {
+                block.GenerateSchema();
+            }
             if (CompareSchema(block)) continue;
             Debug.Log("Block " + block.name + " cannot be placed");
         }
