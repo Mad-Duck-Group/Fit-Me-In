@@ -346,8 +346,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f38118c3d203264fa52fc383f4206c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 7
-  height: 8
+  column: 7
+  row: 8
   cellSize: 1
   offset: {x: 0, y: 0}
   cellPrefab: {fileID: 2357701231013065592, guid: 9c5407d207cbd204e8531208a6616dc9, type: 3}
