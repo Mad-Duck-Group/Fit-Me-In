@@ -9,13 +9,13 @@ public class Block : MonoBehaviour
 {
     [SerializeField] private Atom[] atoms;
 
-    private int[][,] _blockSchemas = new int[4][,];
-    
+    private List<int[,]> _blockSchemas = new List<int[,]>();
+
     private Vector3 _originalPosition;
     private Vector3 _originalRotation;
     private Vector3 _originalScale;
     
-    public int[][,] BlockSchemas => _blockSchemas;
+    public List<int[,]> BlockSchemas => _blockSchemas;
 
     public Atom[] Atoms => atoms;
 
@@ -53,10 +53,11 @@ public class Block : MonoBehaviour
             int y = Mathf.RoundToInt(atom.transform.position.y - mostDown.transform.position.y);
             originalSchema[y, x] = 1;
         }
-        _blockSchemas[0] = ArrayHelper.Rotate180(originalSchema);
-        _blockSchemas[1] = ArrayHelper.Rotate90(_blockSchemas[0]);
-        _blockSchemas[2] = originalSchema;
-        _blockSchemas[3] = ArrayHelper.Rotate270(_blockSchemas[0]);
+        _blockSchemas.Add(ArrayHelper.Rotate180(originalSchema));
+        _blockSchemas.Add(ArrayHelper.Rotate90(_blockSchemas[0]));
+        _blockSchemas.Add(originalSchema);
+        _blockSchemas.Add(ArrayHelper.Rotate270(_blockSchemas[0]));
+        _blockSchemas = _blockSchemas.Distinct().ToList(); //Remove duplicates
     }
 
     /// <summary>
@@ -70,7 +71,7 @@ public class Block : MonoBehaviour
         blockTransform.localScale = _originalScale;
         GridManager.Instance.ResetPreviousValidationCells();
     }
-    
+        
     /// <summary>
     /// Set the sorting order of atoms
     /// </summary>

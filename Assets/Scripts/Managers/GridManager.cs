@@ -218,7 +218,7 @@ public class GridManager : MonoBehaviour
         CreateVacantSchema();
         foreach (var block in blockPrototypes)
         {
-            if (block.BlockSchemas[0] == null)
+            if (block.BlockSchemas.Count == 0)
             {
                 block.GenerateSchema();
             }
