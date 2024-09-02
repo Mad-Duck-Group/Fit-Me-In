@@ -61,7 +61,7 @@ Transform:
   m_GameObject: {fileID: 3119146997640990027}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -223,10 +223,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   atoms:
   - {fileID: 234953631696604214}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 9155061253302965745}
-  - {fileID: 0}
+  allowPickUpAfterPlacement: 0
 --- !u!1 &8390136031403648387
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +238,7 @@ GameObject:
   - component: {fileID: 9155061253302965745}
   - component: {fileID: 5309831752559089460}
   m_Layer: 0
-  m_Name: Atom3
+  m_Name: Atom1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,7 +253,7 @@ Transform:
   m_GameObject: {fileID: 8390136031403648387}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

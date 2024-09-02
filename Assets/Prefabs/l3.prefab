@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3237591643457370463}
   - component: {fileID: 4464389810693648207}
   m_Layer: 0
-  m_Name: Atom2
+  m_Name: Atom1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 519485338117028673}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -190,10 +190,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   atoms:
   - {fileID: 8013484603606109531}
-  - {fileID: 0}
   - {fileID: 3237591643457370463}
   - {fileID: 2811692508101779328}
-  - {fileID: 0}
+  allowPickUpAfterPlacement: 0
 --- !u!1 &7127425133297225052
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +221,7 @@ Transform:
   m_GameObject: {fileID: 7127425133297225052}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -350,7 +349,7 @@ GameObject:
   - component: {fileID: 2811692508101779328}
   - component: {fileID: 1416982017526863413}
   m_Layer: 0
-  m_Name: Atom3
+  m_Name: Atom2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

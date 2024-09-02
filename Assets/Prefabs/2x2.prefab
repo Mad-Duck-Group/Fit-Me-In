@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 475134971703401133}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: -3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -48,9 +48,9 @@ MonoBehaviour:
   atoms:
   - {fileID: 7826244748940250820}
   - {fileID: 9162279052328029448}
-  - {fileID: 0}
   - {fileID: 2130788365188116828}
   - {fileID: 6950287307902176656}
+  allowPickUpAfterPlacement: 0
 --- !u!1 &916119290150579797
 GameObject:
   m_ObjectHideFlags: 0
@@ -76,7 +76,7 @@ Transform:
   m_GameObject: {fileID: 916119290150579797}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 6950287307902176656}
   - component: {fileID: 9031287117486266072}
   m_Layer: 0
-  m_Name: Atom4
+  m_Name: Atom3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -400,7 +400,7 @@ Transform:
   m_GameObject: {fileID: 4911744822008169580}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -528,7 +528,7 @@ GameObject:
   - component: {fileID: 2130788365188116828}
   - component: {fileID: 5660632258719055800}
   m_Layer: 0
-  m_Name: Atom3
+  m_Name: Atom2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -543,7 +543,7 @@ Transform:
   m_GameObject: {fileID: 5298674009970984004}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
+  m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
