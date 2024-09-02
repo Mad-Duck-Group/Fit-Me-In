@@ -17,6 +17,7 @@ public class Atom : MonoBehaviour
 
     private void OnMouseDrag()
     {
+        if (_parentBlock.IsPlaced && !_parentBlock.AllowPickUpAfterPlacement) return;
         HandleBlockManipulation();
         GridManager.Instance.ValidatePlacement(_parentBlock);
         if (_isDragging) return; //Prevent unnecessary calculations
@@ -50,10 +51,17 @@ public class Atom : MonoBehaviour
     
     private void OnMouseUp()
     {
+        if (!_isDragging) return;
         PointerManager.Instance.DeselectBlock();
-        if (!GridManager.Instance.PlaceBlock(_parentBlock))
+        if (GridManager.Instance.PlaceBlock(_parentBlock))
+        {
+            GameManager.Instance.ChangeScore(100);
+            _parentBlock.IsPlaced = true;
+        }
+        else
         {
             _parentBlock.ReturnToOriginal();
+            _parentBlock.IsPlaced = false;
         }
         _isDragging = false;
     }

@@ -8,16 +8,18 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     [SerializeField] private Atom[] atoms;
+    [SerializeField] private bool allowPickUpAfterPlacement = false;
 
     private List<int[,]> _blockSchemas = new List<int[,]>();
-
     private Vector3 _originalPosition;
     private Vector3 _originalRotation;
     private Vector3 _originalScale;
+    private bool _isPlaced;
     
     public List<int[,]> BlockSchemas => _blockSchemas;
-
     public Atom[] Atoms => atoms;
+    public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;
+    public bool IsPlaced {get => _isPlaced; set => _isPlaced = value;}
 
     private void Awake()
     {
@@ -29,7 +31,7 @@ public class Block : MonoBehaviour
         _originalPosition = blockTransform.position;
         _originalRotation = blockTransform.eulerAngles;
         _originalScale = blockTransform.localScale;
-        GenerateSchema();
+        //GenerateSchema();
     }
 
     /// <summary>
