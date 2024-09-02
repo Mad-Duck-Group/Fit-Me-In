@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -25,9 +26,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private TMP_Text gameOverScoreText;
 
     private float _currentGameTimer;
+    private bool _isGameOver;
     private int _score;
+    
+    public bool IsGameOver => _isGameOver;
     // Start is called before the first frame update
 
     private void Awake()
@@ -38,6 +44,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _currentGameTimer = gameTimer;
+        gameOverPanel.SetActive(false);
         UpdateScoreText();
     }
 
@@ -77,8 +84,20 @@ public class GameManager : MonoBehaviour
         timerFill.color = color;
         if (_currentGameTimer <= 0)
         {
-            Debug.Log("Game Over");
+            _isGameOver = true;
+            ShowGameOverPanel();
             _currentGameTimer = 0;
         }
+    }
+    
+    private void ShowGameOverPanel()
+    {
+        gameOverPanel.SetActive(true);
+        gameOverScoreText.text = "Score: " + _score;
+    }
+    
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
