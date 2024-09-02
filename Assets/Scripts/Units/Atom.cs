@@ -30,11 +30,11 @@ public class Atom : MonoBehaviour
     /// </summary>
     private void HandleBlockManipulation()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            _parentBlock.transform.Rotate(0, 0, 90);
-        }
-        if (Input.GetKeyDown(KeyCode.E))
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     _parentBlock.transform.Rotate(0, 0, 90);
+        // }
+        if (Input.GetKeyDown(KeyCode.R))
         {
             _parentBlock.transform.Rotate(0, 0, -90);
         }
