@@ -62,6 +62,8 @@ public class Atom : MonoBehaviour
         {
             GameManager.Instance.ChangeScore(100);
             _parentBlock.IsPlaced = true;
+            RandomBlock.Instance.FreeSpawnPoint(_parentBlock.SpawnIndex);
+            RandomBlock.Instance.SpawnRandomBlock();
         }
         else
         {
