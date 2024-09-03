@@ -20,12 +20,18 @@ public class RandomBlock : MonoBehaviour
         }
     }
     
+    [Serializable]
+    private struct SpawnPoint
+    {
+        [SerializeField] private Transform transform;
+        public Transform Transform => transform;
+        private bool _isFree;
+        public bool IsFree { get => _isFree; set => _isFree = value; }
+
+    }
+    
     [SerializeField] GameObject[] randomObjects;
-    [SerializeField] Transform[] spawnPositions;
-    private int _freeSpawnPoint;
-    public int FreeSpawnPoint { get => _freeSpawnPoint; set => _freeSpawnPoint = value; }
-    bool isFree = true;
-    private int i;
+    [SerializeField] SpawnPoint[] spawnPositions;
 
     void Awake()
     {
@@ -35,31 +41,31 @@ public class RandomBlock : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (i = 0; i < spawnPositions.Length; i++)
+        for (int i = 0; i < spawnPositions.Length; i++)
         {
-            if (isFree == true)
-            {
-                SpawnRandomBlock();
-                if (i >= 3)
-                {
-                    isFree = false;
-                }
-            }
+            FreeSpawnPoint(i);
         }
-        
+        SpawnRandomBlock();
     }
-
-    private void Update()
+    
+    public void FreeSpawnPoint(int index)
     {
-        Debug.Log("FreeSpawnPoint: " + _freeSpawnPoint);
-        Debug.Log("isFree: " + isFree);
+        spawnPositions[index].IsFree = true;
     }
 
     public void SpawnRandomBlock()
     {
-        Transform spawnPosition = spawnPositions[i];
-        int randomIndex = Random.Range(0, randomObjects.Length);
-        Instantiate(randomObjects[randomIndex], spawnPosition.position, Quaternion.identity);
-        _freeSpawnPoint++;
+        for (int i = 0; i < spawnPositions.Length; i++)
+        {
+            if (!spawnPositions[i].IsFree)
+            {
+                continue;
+            }
+            Transform spawnTransform = spawnPositions[i].Transform;
+            int randomIndex = Random.Range(0, randomObjects.Length);
+            Block spawn = Instantiate(randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
+            spawn.SpawnIndex = i;
+            spawnPositions[i].IsFree = false;
+        }
     }
 }

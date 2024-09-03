@@ -1143,9 +1143,9 @@ MonoBehaviour:
   - {fileID: 2886157582485234958, guid: e98723c5c5bfb8d44bd48c8d951f26eb, type: 3}
   - {fileID: 7979424156853358503, guid: 99d5bebd95785794d9ecf8a6ed1d4baf, type: 3}
   spawnPositions:
-  - {fileID: 562958148}
-  - {fileID: 1245042477}
-  - {fileID: 2115693937}
+  - transform: {fileID: 562958148}
+  - transform: {fileID: 1245042477}
+  - transform: {fileID: 2115693937}
 --- !u!1 &1519834681
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,11 +15,13 @@ public class Block : MonoBehaviour
     private Vector3 _originalRotation;
     private Vector3 _originalScale;
     private bool _isPlaced;
+    private int _spawnIndex;
     
     public List<int[,]> BlockSchemas => _blockSchemas;
     public Atom[] Atoms => atoms;
     public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;
     public bool IsPlaced {get => _isPlaced; set => _isPlaced = value;}
+    public int SpawnIndex {get => _spawnIndex; set => _spawnIndex = value;}
 
     private void Awake()
     {
