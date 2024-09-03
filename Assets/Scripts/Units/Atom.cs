@@ -17,6 +17,11 @@ public class Atom : MonoBehaviour
 
     private void OnMouseDrag()
     {
+        if (GameManager.Instance.IsGameOver)
+        {
+            OnMouseUp();
+            return;
+        }
         if (_parentBlock.IsPlaced && !_parentBlock.AllowPickUpAfterPlacement) return;
         HandleBlockManipulation();
         GridManager.Instance.ValidatePlacement(_parentBlock);
