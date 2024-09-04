@@ -6,6 +6,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum ScoreTypes
+{
+    Placement,
+    Combo,
+    Bomb,
+    FitMe,
+}
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -20,14 +27,25 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+    [Header("Time Settings")]
     [SerializeField] private float gameTimer = 60f;
     [SerializeField] private Slider timerSlider;
     [SerializeField] private Image timerFill;
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
-    [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private float bombTimeBonus = 10f;
+    
+    [Header("Game Over Settings")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text gameOverScoreText;
+    
+    [Header("Score Settings")]
+    [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private int scorePerPlacement = 100;
+    [SerializeField] private int scorePerCombo = 100;
+    [SerializeField] private int scorePerBomb = 200;
+    [SerializeField] private int scorePerFitMe = 10000;
+
 
     private float _currentGameTimer;
     private bool _isGameOver;
@@ -64,6 +82,34 @@ public class GameManager : MonoBehaviour
         UpdateScoreText();
     }
 
+    public void AddScore(ScoreTypes scoreType, int contactedAmount = 0)
+    {
+        switch (scoreType)
+        {
+            case ScoreTypes.Placement:
+                ChangeScore(scorePerPlacement);
+                Debug.Log("Placement Score: " + scorePerPlacement);
+                break;
+            case ScoreTypes.Combo:
+                if (contactedAmount <= 1) return;
+                int score = scorePerCombo * (contactedAmount - 1);
+                Debug.Log("Combo Score: " + score);
+                ChangeScore(score);
+                break;
+            case ScoreTypes.Bomb:
+                if (contactedAmount <= 2) return;
+                int bombScore = scorePerBomb * contactedAmount;
+                Debug.Log("Bomb Score: " + bombScore);
+                ChangeScore(bombScore);
+                ChangeGameTimer(bombTimeBonus);
+                break;
+            case ScoreTypes.FitMe:
+                ChangeScore(scorePerFitMe);
+                ChangeGameTimer(gameTimer);
+                break;
+        }
+    }
+
     /// <summary>
     /// Update the score text
     /// </summary>
@@ -84,14 +130,20 @@ public class GameManager : MonoBehaviour
         timerFill.color = color;
         if (_currentGameTimer <= 0)
         {
-            _isGameOver = true;
-            ShowGameOverPanel();
-            _currentGameTimer = 0;
+            GameOver();
         }
     }
     
-    private void ShowGameOverPanel()
+    public void ChangeGameTimer(float value)
     {
+        float newTimer = _currentGameTimer + value;
+        _currentGameTimer = Mathf.Clamp(newTimer, 0, gameTimer);
+    }
+    
+    public void GameOver()
+    {
+        _isGameOver = true;
+        _currentGameTimer = 0;
         gameOverPanel.SetActive(true);
         gameOverScoreText.text = "Score: " + _score;
     }

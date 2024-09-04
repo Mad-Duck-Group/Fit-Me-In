@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
     private Color _originalColor;
-    [SerializeField] private Atom currentAtom;
+    private int[] _index;
+    [SerializeField][ReadOnly] private Atom currentAtom;
     
     public SpriteRenderer SpriteRenderer => _spriteRenderer;
     public Color OriginalColor {get => _originalColor; set => _originalColor = value;}
+    public int[] Index {get => _index; set => _index = value;}
     public Atom CurrentAtom => currentAtom;
     // Start is called before the first frame update
     void Awake()

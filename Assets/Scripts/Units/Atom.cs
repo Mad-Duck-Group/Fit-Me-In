@@ -40,7 +40,7 @@ public class Atom : MonoBehaviour
         // {
         //     _parentBlock.transform.Rotate(0, 0, 90);
         // }
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetMouseButtonDown(1))
         {
             _parentBlock.transform.Rotate(0, 0, -90);
         }
@@ -60,10 +60,10 @@ public class Atom : MonoBehaviour
         PointerManager.Instance.DeselectBlock();
         if (GridManager.Instance.PlaceBlock(_parentBlock))
         {
-            GameManager.Instance.ChangeScore(100);
             _parentBlock.IsPlaced = true;
             RandomBlock.Instance.FreeSpawnPoint(_parentBlock.SpawnIndex);
             RandomBlock.Instance.SpawnRandomBlock();
+            RandomBlock.Instance.GameOverCheck();
         }
         else
         {

@@ -5,8 +5,17 @@ using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 
+
+public enum BlockTypes
+{
+    One,
+    Two,
+    Three,
+    Four
+}
 public class Block : MonoBehaviour
 {
+    [SerializeField] private BlockTypes blockType;
     [SerializeField] private Atom[] atoms;
     [SerializeField] private bool allowPickUpAfterPlacement = false;
 
@@ -17,6 +26,7 @@ public class Block : MonoBehaviour
     private bool _isPlaced;
     private int _spawnIndex;
     
+    public BlockTypes BlockType => blockType;
     public List<int[,]> BlockSchemas => _blockSchemas;
     public Atom[] Atoms => atoms;
     public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;

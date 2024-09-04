@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class RandomBlock : MonoBehaviour
@@ -21,17 +23,23 @@ public class RandomBlock : MonoBehaviour
     }
     
     [Serializable]
-    private struct SpawnPoint
+    public struct SpawnPoint
     {
         [SerializeField] private Transform transform;
         public Transform Transform => transform;
         private bool _isFree;
         public bool IsFree { get => _isFree; set => _isFree = value; }
-
+        private Block _currentBlock;
+        public Block CurrentBlock
+        {
+            get => _currentBlock;
+            set => _currentBlock = value;
+        }
     }
     
     [SerializeField] GameObject[] randomObjects;
-    [SerializeField] SpawnPoint[] spawnPositions;
+    [FormerlySerializedAs("spawnPositions")] [SerializeField] SpawnPoint[] spawnPoints;
+    public SpawnPoint[] SpawnPoints => spawnPoints;
 
     void Awake()
     {
@@ -41,7 +49,7 @@ public class RandomBlock : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < spawnPositions.Length; i++)
+        for (int i = 0; i < spawnPoints.Length; i++)
         {
             FreeSpawnPoint(i);
         }
@@ -50,22 +58,33 @@ public class RandomBlock : MonoBehaviour
     
     public void FreeSpawnPoint(int index)
     {
-        spawnPositions[index].IsFree = true;
+        spawnPoints[index].IsFree = true;
+        spawnPoints[index].CurrentBlock = null;
     }
 
     public void SpawnRandomBlock()
     {
-        for (int i = 0; i < spawnPositions.Length; i++)
+        for (int i = 0; i < spawnPoints.Length; i++)
         {
-            if (!spawnPositions[i].IsFree)
+            if (!spawnPoints[i].IsFree)
             {
                 continue;
             }
-            Transform spawnTransform = spawnPositions[i].Transform;
+            Transform spawnTransform = spawnPoints[i].Transform;
             int randomIndex = Random.Range(0, randomObjects.Length);
             Block spawn = Instantiate(randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
             spawn.SpawnIndex = i;
-            spawnPositions[i].IsFree = false;
+            spawnPoints[i].IsFree = false;
+            spawnPoints[i].CurrentBlock = spawn;
+        }
+    }
+
+    public void GameOverCheck()
+    {
+        List<Block> blockToCheck = spawnPoints.Select(spawnPoint => spawnPoint.CurrentBlock).ToList();
+        if (!GridManager.Instance.CheckAvailableBlock(blockToCheck, out _))
+        {
+            GameManager.Instance.GameOver();
         }
     }
 }
