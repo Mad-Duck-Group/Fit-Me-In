@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,15 @@ public class Atom : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    private void OnMouseEnter()
+    {
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) return;
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockHover, out _);
+    }
+
     private void OnMouseDrag()
     {
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) return;
         if (GameManager.Instance.IsGameOver)
         {
             OnMouseUp();
@@ -43,6 +51,7 @@ public class Atom : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             _parentBlock.transform.Rotate(0, 0, -90);
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockRotate, out _);
         }
         // if (Input.GetKeyDown(KeyCode.F))
         // {
@@ -56,17 +65,20 @@ public class Atom : MonoBehaviour
     
     private void OnMouseUp()
     {
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) return;
         if (!_isDragging) return;
         PointerManager.Instance.DeselectBlock();
         if (GridManager.Instance.PlaceBlock(_parentBlock))
         {
             _parentBlock.IsPlaced = true;
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockPlaced, out _);
             RandomBlock.Instance.FreeSpawnPoint(_parentBlock.SpawnIndex);
             RandomBlock.Instance.SpawnRandomBlock();
             RandomBlock.Instance.GameOverCheck();
         }
         else
         {
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockCancel, out _);
             _parentBlock.ReturnToOriginal();
             _parentBlock.IsPlaced = false;
         }
