@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -25,15 +26,20 @@ public class Block : MonoBehaviour
     private Vector3 _originalScale;
     private bool _isPlaced;
     private int _spawnIndex;
-    
+    private float _previousRotation;
+    private Tween _transformTween;
+    private Tween _rotationTween;
+    private Coroutine _rotateCoroutine;
+
     public BlockTypes BlockType => blockType;
     public List<int[,]> BlockSchemas => _blockSchemas;
     public Atom[] Atoms => atoms;
     public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;
     public bool IsPlaced {get => _isPlaced; set => _isPlaced = value;}
     public int SpawnIndex {get => _spawnIndex; set => _spawnIndex = value;}
+    public Tween RotationTween => _rotationTween;
 
-    private void Awake()
+    private void Start()
     {
         foreach (var atom in atoms)
         {
@@ -73,6 +79,48 @@ public class Block : MonoBehaviour
         _blockSchemas.Add(ArrayHelper.Rotate270(_blockSchemas[0]));
         _blockSchemas = _blockSchemas.Distinct().ToList(); //Remove duplicates
     }
+    
+    public void RotateBlock(float angle)
+    {
+        if (_rotateCoroutine != null)
+        {
+            return;
+        }
+        _rotateCoroutine = StartCoroutine(Rotate(angle));
+    }
+
+    private IEnumerator Rotate(float angle)
+    {
+        if (IsPlaced) yield break;
+        Vector3 currentRotation = new Vector3(0, 0, _previousRotation);
+        float newAngle = currentRotation.z + angle;
+        switch (newAngle)
+        {
+            case < 0:
+                newAngle = 360 + newAngle;
+                break;
+            case >= 360:
+                newAngle -= 360;
+                break;
+        }
+        if (_rotationTween.IsActive())
+        {
+            transform.eulerAngles = new Vector3(0, 0, _previousRotation);
+        }
+        _rotationTween = transform.DORotate(new Vector3(0, 0, newAngle), 0.2f);
+        _previousRotation = newAngle;
+        _rotateCoroutine = null;
+    }
+
+    public void PickUpBlock()
+    {
+        //Tween the block to (1, 1, 1) scale
+        if (_transformTween.IsActive())
+        {
+            _transformTween.Kill();
+        }
+        _transformTween = transform.DOScale(Vector3.one, 0.2f);
+    }
 
     /// <summary>
     /// Return the block to its original position, rotation and scale
@@ -80,12 +128,19 @@ public class Block : MonoBehaviour
     public void ReturnToOriginal()
     {
         var blockTransform = transform;
-        blockTransform.position = _originalPosition;
-        blockTransform.eulerAngles = _originalRotation;
-        blockTransform.localScale = _originalScale;
+        //Tween the block to the original position
+        if (_transformTween.IsActive())
+        {
+            _transformTween.Kill();
+        }
+        _transformTween = blockTransform.DOMove(_originalPosition, 0.2f).OnComplete(() => SetRendererSortingOrder(1));
+        //Tween the block to the original rotation
+        blockTransform.DORotate(_originalRotation, 0.2f);
+        //Tween the block to the original scale
+        blockTransform.DOScale(_originalScale, 0.2f);
         GridManager.Instance.ResetPreviousValidationCells();
     }
-        
+
     /// <summary>
     /// Set the sorting order of atoms
     /// </summary>

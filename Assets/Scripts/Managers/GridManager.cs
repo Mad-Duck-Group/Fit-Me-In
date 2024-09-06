@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using JetBrains.Annotations;
 using NaughtyAttributes;
 using UnityEngine;
@@ -183,6 +184,7 @@ public class GridManager : MonoBehaviour
         {
             GameManager.Instance.AddScore(ScoreTypes.FitMe);
             RemoveAllBlocks(true);
+            ResetPreviousValidationCells();
             return true;
         }
         if (CheckForContact(block, cells, out Contacts contacts))

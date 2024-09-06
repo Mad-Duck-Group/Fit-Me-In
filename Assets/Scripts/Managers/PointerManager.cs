@@ -61,7 +61,6 @@ public class PointerManager : MonoBehaviour
     {
         if (!_selectedBlock) return;
         _mousePositionDifference = Vector3.zero;
-        _selectedBlock.SetRendererSortingOrder(1);
         _selectedBlock = null;
     }
     

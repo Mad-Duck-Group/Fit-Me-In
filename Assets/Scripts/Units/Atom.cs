@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Atom : MonoBehaviour
@@ -10,7 +11,7 @@ public class Atom : MonoBehaviour
     private bool _isDragging;
     public Block ParentBlock {get => _parentBlock; set => _parentBlock = value;}
     public SpriteRenderer SpriteRenderer => _spriteRenderer;
-    
+
     void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -35,6 +36,7 @@ public class Atom : MonoBehaviour
         GridManager.Instance.ValidatePlacement(_parentBlock);
         if (_isDragging) return; //Prevent unnecessary calculations
         PointerManager.Instance.SelectBlock(_parentBlock);
+        _parentBlock.PickUpBlock();
         GridManager.Instance.RemoveBlock(_parentBlock);
         _isDragging = true;
     }
@@ -50,7 +52,7 @@ public class Atom : MonoBehaviour
         // }
         if (Input.GetMouseButtonDown(1))
         {
-            _parentBlock.transform.Rotate(0, 0, -90);
+            _parentBlock.RotateBlock(-90);
             SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockRotate, out _);
         }
         // if (Input.GetKeyDown(KeyCode.F))
@@ -63,14 +65,17 @@ public class Atom : MonoBehaviour
         // }
     }
     
-    private void OnMouseUp()
+    private IEnumerator OnMouseUp()
     {
-        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) return;
-        if (!_isDragging) return;
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) yield break;
+        if (!_isDragging) yield break;
         PointerManager.Instance.DeselectBlock();
+        if (_parentBlock.RotationTween != null)
+            yield return new DOTweenCYInstruction.WaitForCompletion(_parentBlock.RotationTween);
         if (GridManager.Instance.PlaceBlock(_parentBlock))
         {
             _parentBlock.IsPlaced = true;
+            _parentBlock.SetRendererSortingOrder(1);
             SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockPlaced, out _);
             RandomBlock.Instance.FreeSpawnPoint(_parentBlock.SpawnIndex);
             RandomBlock.Instance.SpawnRandomBlock();

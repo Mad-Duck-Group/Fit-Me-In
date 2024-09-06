@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -76,7 +77,7 @@ public class GameManager : MonoBehaviour
         _currentGameTimer = gameTimer;
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
-        UpdateScoreText();
+        UpdateScoreText(false);
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.CountOff, out _);
     }
 
@@ -138,8 +139,16 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Update the score text
     /// </summary>
-    private void UpdateScoreText()
+    private void UpdateScoreText(bool bump = true)
     {
+        //Bump animation
+        if (bump)
+        {
+            scoreText.transform.DOScale(1.2f, 0.1f).OnComplete(() =>
+            {
+                scoreText.transform.DOScale(1f, 0.1f);
+            });
+        }
         scoreText.text = "Score: " + _score;
     }
     
@@ -176,11 +185,18 @@ public class GameManager : MonoBehaviour
             GameOver();
         }
     }
-    
-    public void ChangeGameTimer(float value)
+
+    public void ChangeGameTimer(float value, bool bump = true)
     {
         float newTimer = _currentGameTimer + value;
         _currentGameTimer = Mathf.Clamp(newTimer, 0, gameTimer);
+        if (bump)
+        {
+            timerSlider.transform.DOScale(1.2f, 0.1f).OnComplete(() =>
+            {
+                timerSlider.transform.DOScale(1f, 0.1f);
+            });
+        }
         if (_currentGameTimer > 10)
         {
             _countDownPlayed = false;

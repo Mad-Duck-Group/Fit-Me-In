@@ -36,7 +36,8 @@ public class RandomBlock : MonoBehaviour
             set => _currentBlock = value;
         }
     }
-    
+
+    [SerializeField] private float objectScale = 0.5f;
     [SerializeField] GameObject[] randomObjects;
     [FormerlySerializedAs("spawnPositions")] [SerializeField] SpawnPoint[] spawnPoints;
     public SpawnPoint[] SpawnPoints => spawnPoints;
@@ -74,6 +75,7 @@ public class RandomBlock : MonoBehaviour
             int randomIndex = Random.Range(0, randomObjects.Length);
             Block spawn = Instantiate(randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
             spawn.SpawnIndex = i;
+            spawn.transform.localScale = new Vector3(objectScale, objectScale, 1f);
             spawnPoints[i].IsFree = false;
             spawnPoints[i].CurrentBlock = spawn;
         }
