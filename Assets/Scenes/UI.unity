@@ -841,12 +841,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -909,7 +909,7 @@ Camera:
   field of view: 34
   orthographic: 1
   orthographic size: 7
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -919,9 +919,9 @@ Camera:
   m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 0
-  m_AllowDynamicResolution: 0
+  m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 0
+  m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &519420032
@@ -1129,7 +1129,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 40e84c549d79f3540a14992f1de6e586, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 10fc4df2da32a41aaa32d77bc913491c, type: 2}
 --- !u!4 &654609430
 Transform:
   m_ObjectHideFlags: 0
@@ -2087,10 +2087,10 @@ SceneRoots:
   - {fileID: 370745937}
   - {fileID: 1494684826}
   - {fileID: 519420032}
+  - {fileID: 654609430}
   - {fileID: 370137021}
   - {fileID: 1079193177}
   - {fileID: 619394802}
   - {fileID: 648597361}
   - {fileID: 1385424019}
   - {fileID: 111653243}
-  - {fileID: 654609430}
