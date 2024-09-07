@@ -70,8 +70,8 @@ public class Atom : MonoBehaviour
         if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) yield break;
         if (!_isDragging) yield break;
         PointerManager.Instance.DeselectBlock();
-        if (_parentBlock.RotationTween != null)
-            yield return new DOTweenCYInstruction.WaitForCompletion(_parentBlock.RotationTween);
+        if (_parentBlock.RotateCoroutine != null)
+            yield return new WaitUntil(() => _parentBlock.RotateCoroutine == null);
         if (GridManager.Instance.PlaceBlock(_parentBlock))
         {
             _parentBlock.IsPlaced = true;
@@ -80,8 +80,10 @@ public class Atom : MonoBehaviour
             RandomBlock.Instance.FreeSpawnPoint(_parentBlock.SpawnIndex);
             RandomBlock.Instance.DestroyBlock();
             RandomBlock.Instance.SpawnRandomBlock();
-            RandomBlock.Instance.GameOverCheck();
-
+            if (GameManager.Instance.CurrentReRoll <= 0)
+            {
+                RandomBlock.Instance.GameOverCheck();
+            }
         }
         else
         {

@@ -28,7 +28,6 @@ public class Block : MonoBehaviour
     private int _spawnIndex;
     private float _previousRotation;
     private Tween _transformTween;
-    private Tween _rotationTween;
     private Coroutine _rotateCoroutine;
 
     public BlockTypes BlockType => blockType;
@@ -41,7 +40,7 @@ public class Block : MonoBehaviour
     public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;
     public bool IsPlaced {get => _isPlaced; set => _isPlaced = value;}
     public int SpawnIndex {get => _spawnIndex; set => _spawnIndex = value;}
-    public Tween RotationTween => _rotationTween;
+    public Coroutine RotateCoroutine => _rotateCoroutine;
 
     private void Start()
     {
@@ -97,30 +96,21 @@ public class Block : MonoBehaviour
     private IEnumerator Rotate(float angle)
     {
         if (IsPlaced) yield break;
-        Vector3 currentRotation = new Vector3(0, 0, _previousRotation);
+        Vector3 currentRotation = transform.eulerAngles;
         float newAngle = currentRotation.z + angle;
-        switch (newAngle)
+        // if (_rotationTween.IsActive())
+        // {
+        //     _rotationTween.Kill();
+        //     transform.eulerAngles = new Vector3(0, 0, _previousRotation);
+        // }
+        // _rotationTween = transform.DORotate(new Vector3(0, 0, newAngle), 0.2f);
+        float timer = 0;
+        while (timer < 0.1f)
         {
-            case 360:
-                newAngle = 0;
-                break;
-            case -90:
-                newAngle = 270;
-                break;
-            case -180:
-                newAngle = 180;
-                break;
-            case -270:
-                newAngle = 90;
-                break;
+            timer += Time.deltaTime;
+            transform.eulerAngles = Vector3.Lerp(currentRotation, new Vector3(0, 0, newAngle), timer / 0.1f);
+            yield return null;
         }
-        
-        if (_rotationTween.IsActive())
-        {
-            _rotationTween.Kill();
-            transform.eulerAngles = new Vector3(0, 0, _previousRotation);
-        }
-        _rotationTween = transform.DORotate(new Vector3(0, 0, newAngle), 0.2f);
         _previousRotation = newAngle;
         _rotateCoroutine = null;
     }

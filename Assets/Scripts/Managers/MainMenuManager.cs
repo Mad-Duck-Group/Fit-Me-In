@@ -34,7 +34,7 @@ public class MainMenuManager : MonoBehaviour
     private IEnumerator LoadGameScene()
     {
         //Tween the canvas out of the screen
-        AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync("UI", LoadSceneMode.Additive); 
+        AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(SceneNames.Game.ToString(), LoadSceneMode.Additive); 
         while (!loadSceneAsync.isDone)
         {
             yield return null;
@@ -42,7 +42,7 @@ public class MainMenuManager : MonoBehaviour
         canvas.transform.DOLocalMove(canvasSlideDistance, 2f).SetEase(Ease.OutBack).OnComplete(() =>
         {
             GameManager.Instance.ActivateScene();
-            SceneManager.UnloadSceneAsync("MainMenu");
+            SceneManager.UnloadSceneAsync(SceneNames.MainMenu.ToString());
         });
     }
     

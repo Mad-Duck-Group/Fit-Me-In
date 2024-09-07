@@ -39,6 +39,10 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Vector2 offset;
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private GameObject cellParent;
+    [SerializeField] private Color whiteColor;
+    [SerializeField] private Color blackColor;
+    [SerializeField] private Color canBePlacedColor;
+    [SerializeField] private Color cannotBePlacedColor;
     //[SerializeField] private Block[] blockPrototypes;
     private Cell[,] _cellArray;
     private List<Cell> _previousValidationCells = new List<Cell>();
@@ -104,13 +108,13 @@ public class GridManager : MonoBehaviour
                 if (x % 2 == 0)
                 {
                     _cellArray[x, y].SpriteRenderer.color =
-                        y % 2 == 0 ? new Color32(0, 0, 0, 255) : new Color32(255, 255, 255, 255);
+                        y % 2 == 0 ? blackColor : whiteColor;
                     _cellArray[x, y].OriginalColor = _cellArray[x, y].SpriteRenderer.color;
                 }
                 else
                 {
                     _cellArray[x, y].SpriteRenderer.color =
-                        y % 2 == 0 ? new Color32(255, 255, 255, 255) : new Color32(0, 0, 0, 255);
+                        y % 2 == 0 ? whiteColor : blackColor;
                     _cellArray[x, y].OriginalColor = _cellArray[x, y].SpriteRenderer.color;
                 }
             }
@@ -143,10 +147,10 @@ public class GridManager : MonoBehaviour
         _previousValidationCells = cells;
         if (cells.Count < block.Atoms.Length)
         {
-            cells.ForEach(cell => cell.SpriteRenderer.color = new Color32(255, 0, 0, 255));
+            cells.ForEach(cell => cell.SpriteRenderer.color = cannotBePlacedColor);
             return false;
         }
-        cells.ForEach(cell => cell.SpriteRenderer.color = new Color32(0, 255, 0, 255));
+        cells.ForEach(cell => cell.SpriteRenderer.color = canBePlacedColor);
         return true;
     }
     

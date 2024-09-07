@@ -4,6 +4,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum SceneNames
+{
+    MainMenu,
+    Game,
+    Leaderboard
+}
 public class LoadSceneManager : MonoBehaviour
 {
     private static LoadSceneManager _instance;
@@ -23,6 +29,8 @@ public class LoadSceneManager : MonoBehaviour
     public Scene FirstSceneLoaded => _firstSceneLoaded;
     private bool _retry;
     public bool Retry {get => _retry; set => _retry = value; }
+    private int _score;
+    public int Score { get => _score; set => _score = value; }
     
     private void Awake()
     {

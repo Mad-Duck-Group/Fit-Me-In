@@ -131,6 +131,7 @@ public class RandomBlock : MonoBehaviour
     {
         DestroyBlock(true);
         SpawnRandomBlock();
+        GameOverCheck();
     }
     
 
@@ -148,5 +149,10 @@ public class RandomBlock : MonoBehaviour
         {
             GameManager.Instance.GameOver();
         }
+    }
+
+    private void OnDestroy()
+    {
+        _scaleTween.Kill();
     }
 }

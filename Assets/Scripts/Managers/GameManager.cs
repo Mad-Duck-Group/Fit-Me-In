@@ -71,9 +71,11 @@ public class GameManager : MonoBehaviour
     private int _score;
     private bool _countDownPlayed;
     private AudioSource _bgmAudioSource;
+    private Coroutine _leaderboardCoroutine;
     public bool IsGameOver => _isGameOver;
     public bool GameStarted => _gameStarted;
     public bool IsPaused => _isPaused;
+    public int CurrentReRoll => _currentReRoll;
     // Start is called before the first frame update
 
     private void Awake()
@@ -284,17 +286,28 @@ public class GameManager : MonoBehaviour
     
     public void GameOver()
     {
+        if (_leaderboardCoroutine != null) return;
         _isGameOver = true;
         _currentGameTimer = 0;
-        gameOverPanel.SetActive(true);
-        gameOverScoreText.text = "Score: " + _score;
+        // gameOverPanel.SetActive(true);
+        // gameOverScoreText.text = "Score: " + _score;
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeOut, out _);
         SoundManager.Instance.StopSound(_bgmAudioSource);
+        LoadSceneManager.Instance.Score = _score;
+        _leaderboardCoroutine = StartCoroutine(LoadLeaderboard());
     }
     
+    private IEnumerator LoadLeaderboard()
+    {
+        AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(SceneNames.Leaderboard.ToString(), LoadSceneMode.Additive);
+        while (!loadSceneAsync.isDone)
+        {
+            yield return null;
+        }
+    }
     public void BackToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(SceneNames.MainMenu.ToString());
     }
 
     public void Retry()
