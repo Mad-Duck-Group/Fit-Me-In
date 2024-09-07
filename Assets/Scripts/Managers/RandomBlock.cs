@@ -80,6 +80,27 @@ public class RandomBlock : MonoBehaviour
             spawnPoints[i].CurrentBlock = spawn;
         }
     }
+    
+    public void DestroyBlock(bool destroyAll = false)
+    {
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (destroyAll)
+            {
+                Destroy(spawnPoints[i].CurrentBlock.gameObject);
+                FreeSpawnPoint(i);
+            }
+            else if (!spawnPoints[i].IsFree)
+            {
+                Destroy(spawnPoints[i].CurrentBlock.gameObject);
+                FreeSpawnPoint(i);
+            }
+        }
+        if (!destroyAll)
+        {
+            SpawnRandomBlock();
+        }
+    }
 
     public void GameOverCheck()
     {

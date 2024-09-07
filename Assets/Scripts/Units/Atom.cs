@@ -78,8 +78,10 @@ public class Atom : MonoBehaviour
             _parentBlock.SetRendererSortingOrder(1);
             SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockPlaced, out _);
             RandomBlock.Instance.FreeSpawnPoint(_parentBlock.SpawnIndex);
+            RandomBlock.Instance.DestroyBlock();
             RandomBlock.Instance.SpawnRandomBlock();
             RandomBlock.Instance.GameOverCheck();
+
         }
         else
         {
