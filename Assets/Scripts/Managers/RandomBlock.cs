@@ -38,7 +38,11 @@ public class RandomBlock : MonoBehaviour
     }
 
     [SerializeField] private float objectScale = 0.5f;
-    [SerializeField] GameObject[] randomObjects;
+    [SerializeField] List<GameObject> randomObjects;
+    [SerializeField] GameObject[] topten;
+    [SerializeField] GameObject[] jelly;
+    [SerializeField] GameObject[] pan;
+    [SerializeField] GameObject[] sankaya;
     [FormerlySerializedAs("spawnPositions")] [SerializeField] SpawnPoint[] spawnPoints;
     public SpawnPoint[] SpawnPoints => spawnPoints;
 
@@ -63,8 +67,21 @@ public class RandomBlock : MonoBehaviour
         spawnPoints[index].CurrentBlock = null;
     }
 
+    public void RandomType()
+    {
+        GameObject toptenObj = topten[Random.Range(0, topten.Length)];
+        GameObject jellyObj = jelly[Random.Range(0, jelly.Length)];
+        GameObject panObj = pan[Random.Range(0, pan.Length)];
+        GameObject sankayaObj = sankaya[Random.Range(0, sankaya.Length)];
+        
+        randomObjects = new List<GameObject>() {toptenObj, jellyObj, panObj, sankayaObj};
+        
+        
+    }
+
     public void SpawnRandomBlock()
     {
+        RandomType();
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             if (!spawnPoints[i].IsFree)
@@ -72,8 +89,9 @@ public class RandomBlock : MonoBehaviour
                 continue;
             }
             Transform spawnTransform = spawnPoints[i].Transform;
-            int randomIndex = Random.Range(0, randomObjects.Length);
+            int randomIndex = Random.Range(0, randomObjects.Count);
             Block spawn = Instantiate(randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
+            randomObjects.RemoveAt(randomIndex);
             spawn.SpawnIndex = i;
             spawn.transform.localScale = new Vector3(objectScale, objectScale, 1f);
             spawnPoints[i].IsFree = false;
@@ -101,6 +119,13 @@ public class RandomBlock : MonoBehaviour
             SpawnRandomBlock();
         }
     }
+    
+    public void ReRoll()
+    {
+        DestroyBlock(true);
+        SpawnRandomBlock();
+    }
+    
 
     public void GameOverCheck()
     {
