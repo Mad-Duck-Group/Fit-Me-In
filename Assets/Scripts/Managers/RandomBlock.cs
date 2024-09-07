@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -29,7 +30,7 @@ public class RandomBlock : MonoBehaviour
         public Transform Transform => transform;
         private bool _isFree;
         public bool IsFree { get => _isFree; set => _isFree = value; }
-        private Block _currentBlock;
+        [SerializeField] private Block _currentBlock;
         public Block CurrentBlock
         {
             get => _currentBlock;
@@ -38,12 +39,13 @@ public class RandomBlock : MonoBehaviour
     }
 
     [SerializeField] private float objectScale = 0.5f;
-    [SerializeField] List<GameObject> randomObjects;
-    [SerializeField] GameObject[] topten;
-    [SerializeField] GameObject[] jelly;
-    [SerializeField] GameObject[] pan;
-    [SerializeField] GameObject[] sankaya;
-    [FormerlySerializedAs("spawnPositions")] [SerializeField] SpawnPoint[] spawnPoints;
+    [SerializeField] private GameObject[] topten;
+    [SerializeField] private GameObject[] jelly;
+    [SerializeField] private GameObject[] pan;
+    [SerializeField] private GameObject[] sankaya;
+    [FormerlySerializedAs("spawnPositions")] [SerializeField] private SpawnPoint[] spawnPoints;
+    private List<GameObject> _randomObjects;
+    private Tween _scaleTween;
     public SpawnPoint[] SpawnPoints => spawnPoints;
 
     void Awake()
@@ -74,7 +76,7 @@ public class RandomBlock : MonoBehaviour
         GameObject panObj = pan[Random.Range(0, pan.Length)];
         GameObject sankayaObj = sankaya[Random.Range(0, sankaya.Length)];
         
-        randomObjects = new List<GameObject>() {toptenObj, jellyObj, panObj, sankayaObj};
+        _randomObjects = new List<GameObject>() {toptenObj, jellyObj, panObj, sankayaObj};
         
         
     }
@@ -89,11 +91,18 @@ public class RandomBlock : MonoBehaviour
                 continue;
             }
             Transform spawnTransform = spawnPoints[i].Transform;
-            int randomIndex = Random.Range(0, randomObjects.Count);
-            Block spawn = Instantiate(randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
-            randomObjects.RemoveAt(randomIndex);
+            int randomIndex = Random.Range(0, _randomObjects.Count);
+            Block spawn = Instantiate(_randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
+            _randomObjects.RemoveAt(randomIndex);
             spawn.SpawnIndex = i;
-            spawn.transform.localScale = new Vector3(objectScale, objectScale, 1f);
+            spawn.transform.localScale = Vector3.zero;
+            Vector3 scale = new Vector3(objectScale, objectScale, 1f);
+            int randomRotation = Random.Range(0, 4) * 90;
+            spawn.transform.eulerAngles = new Vector3(0, 0, randomRotation);
+            _scaleTween = spawn.transform.DOScale(scale, 0.2f);
+            spawn.OriginalPosition = spawn.transform.position;
+            spawn.OriginalRotation = spawn.transform.eulerAngles;
+            spawn.OriginalScale = scale;
             spawnPoints[i].IsFree = false;
             spawnPoints[i].CurrentBlock = spawn;
         }
@@ -105,18 +114,16 @@ public class RandomBlock : MonoBehaviour
         {
             if (destroyAll)
             {
+                spawnPoints[i].CurrentBlock.transform.DOKill();
                 Destroy(spawnPoints[i].CurrentBlock.gameObject);
                 FreeSpawnPoint(i);
             }
             else if (!spawnPoints[i].IsFree)
             {
+                spawnPoints[i].CurrentBlock.transform.DOKill();
                 Destroy(spawnPoints[i].CurrentBlock.gameObject);
                 FreeSpawnPoint(i);
             }
-        }
-        if (!destroyAll)
-        {
-            SpawnRandomBlock();
         }
     }
     
@@ -129,6 +136,13 @@ public class RandomBlock : MonoBehaviour
 
     public void GameOverCheck()
     {
+        StartCoroutine(GameOverCheckCoroutine());
+    }
+
+    private IEnumerator GameOverCheckCoroutine()
+    {
+        if (_scaleTween.IsActive())
+            yield return new DOTweenCYInstruction.WaitForCompletion(_scaleTween);
         List<Block> blockToCheck = spawnPoints.Select(spawnPoint => spawnPoint.CurrentBlock).ToList();
         if (!GridManager.Instance.CheckAvailableBlock(blockToCheck, out _))
         {

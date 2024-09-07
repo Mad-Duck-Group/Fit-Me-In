@@ -9,10 +9,10 @@ using UnityEngine;
 
 public enum BlockTypes
 {
-    One,
-    Two,
-    Three,
-    Four
+    Topten,
+    Jelly,
+    Pan,
+    Sankaya
 }
 public class Block : MonoBehaviour
 {
@@ -32,6 +32,10 @@ public class Block : MonoBehaviour
     private Coroutine _rotateCoroutine;
 
     public BlockTypes BlockType => blockType;
+    public Vector3 OriginalPosition {get => _originalPosition; set => _originalPosition = value;}
+    public Vector3 OriginalRotation {get => _originalRotation; set => _originalRotation = value;}
+    public Vector3 OriginalScale {get => _originalScale; set => _originalScale = value;}
+    
     public List<int[,]> BlockSchemas => _blockSchemas;
     public Atom[] Atoms => atoms;
     public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;
@@ -45,13 +49,10 @@ public class Block : MonoBehaviour
         {
             atom.ParentBlock = this;
         }
-        var blockTransform = transform;
-        _originalPosition = blockTransform.position;
-        _originalRotation = blockTransform.eulerAngles;
-        _originalScale = blockTransform.localScale;
-        //GenerateSchema();
+        _previousRotation = transform.eulerAngles.z;
     }
 
+    [Button("Test")]
     /// <summary>
     /// Generate the schema of the block, 1 is an atom, 0 is empty
     /// </summary>
@@ -96,15 +97,23 @@ public class Block : MonoBehaviour
         float newAngle = currentRotation.z + angle;
         switch (newAngle)
         {
-            case < 0:
-                newAngle = 360 + newAngle;
+            case 360:
+                newAngle = 0;
                 break;
-            case >= 360:
-                newAngle -= 360;
+            case -90:
+                newAngle = 270;
+                break;
+            case -180:
+                newAngle = 180;
+                break;
+            case -270:
+                newAngle = 90;
                 break;
         }
+        
         if (_rotationTween.IsActive())
         {
+            _rotationTween.Kill();
             transform.eulerAngles = new Vector3(0, 0, _previousRotation);
         }
         _rotationTween = transform.DORotate(new Vector3(0, 0, newAngle), 0.2f);
