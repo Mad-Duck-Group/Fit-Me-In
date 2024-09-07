@@ -68,7 +68,7 @@ MonoBehaviour:
   timeOut: {fileID: 0}
   pause: {fileID: 0}
   mainMenuBGM: {fileID: 0}
-  gameBGM: {fileID: 8300000, guid: b1281c018c74d744f8c9b5a22ef90349, type: 3}
+  gameBGM: {fileID: 0}
   leaderboardBGM: {fileID: 0}
 --- !u!81 &6062633838589746455
 AudioListener:
