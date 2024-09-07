@@ -17,7 +17,7 @@ public class RandomBlock : MonoBehaviour
         {
             if (_instance == null)
             {
-                Debug.LogError("Game Manager is null");
+                Debug.LogError("Random Block Manager is null");
             }
             return _instance;
         }
@@ -54,7 +54,7 @@ public class RandomBlock : MonoBehaviour
     } 
     
     // Start is called before the first frame update
-    void Start()
+    public void SpawnAtStart()
     {
         for (int i = 0; i < spawnPoints.Length; i++)
         {

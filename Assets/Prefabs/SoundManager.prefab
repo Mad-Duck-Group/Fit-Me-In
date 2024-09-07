@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 266374755054176330}
   - component: {fileID: 5848538069673882696}
+  - component: {fileID: 6062633838589746455}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -66,6 +67,14 @@ MonoBehaviour:
   tenSecondsLeft: {fileID: 0}
   timeOut: {fileID: 0}
   pause: {fileID: 0}
-  mainMenuBGM: {fileID: 8300000, guid: b1281c018c74d744f8c9b5a22ef90349, type: 3}
-  gameBGM: {fileID: 0}
+  mainMenuBGM: {fileID: 0}
+  gameBGM: {fileID: 8300000, guid: b1281c018c74d744f8c9b5a22ef90349, type: 3}
   leaderboardBGM: {fileID: 0}
+--- !u!81 &6062633838589746455
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9151418535016608661}
+  m_Enabled: 1

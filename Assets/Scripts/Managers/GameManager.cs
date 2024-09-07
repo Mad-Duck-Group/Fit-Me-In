@@ -30,12 +30,16 @@ public class GameManager : MonoBehaviour
     }
     [Header("Time Settings")]
     [SerializeField] private float gameTimer = 60f;
-    [SerializeField] private float countOffTime = 3f;
     [SerializeField] private Slider timerSlider;
     [SerializeField] private Image timerFill;
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private float bombTimeBonus = 10f;
+    
+    [Header("Count Off Settings")]
+    [SerializeField] private float countOffTime = 3f;
+    [SerializeField] private GameObject countOffPanel;
+    [SerializeField] private TMP_Text countOffText;
 
     [Header("Reroll Settings")] 
     [SerializeField] private TMP_Text reRollText;
@@ -55,7 +59,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int scorePerCombo = 100;
     [SerializeField] private int scorePerBomb = 200;
     [SerializeField] private int scorePerFitMe = 10000;
-    
+
+    private bool _sceneActivated;
     private int _currentReRoll;
     private int _previousReRollScore;
     private float _currentGameTimer;
@@ -66,10 +71,8 @@ public class GameManager : MonoBehaviour
     private int _score;
     private bool _countDownPlayed;
     private AudioSource _bgmAudioSource;
-    
     public bool IsGameOver => _isGameOver;
     public bool GameStarted => _gameStarted;
-    
     public bool IsPaused => _isPaused;
     // Start is called before the first frame update
 
@@ -83,14 +86,26 @@ public class GameManager : MonoBehaviour
         _currentGameTimer = gameTimer;
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
+        countOffPanel.SetActive(true);
         UpdateScoreText(false);
         UpdateReRollText(false);
+        if (LoadSceneManager.Instance.FirstSceneLoaded == SceneManager.GetActiveScene() || LoadSceneManager.Instance.Retry)
+        {
+            ActivateScene();
+            LoadSceneManager.Instance.Retry = false;
+        }
+    }
+    
+    public void ActivateScene()
+    {
+        _sceneActivated = true;
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.CountOff, out _);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!_sceneActivated) return;
         UpdateCountOff();
         UpdateGameTimer();
     }
@@ -169,9 +184,20 @@ public class GameManager : MonoBehaviour
     {
         if (GameStarted || IsPaused) return;
         _countOffTimer += Time.deltaTime;
+        int countOff = Mathf.CeilToInt(countOffTime - _countOffTimer) - 1;
+        if (countOff == 0)
+        {
+            countOffText.text = "GO!";
+        }
+        else
+        {
+            countOffText.text = countOff.ToString();
+        }
         if (_countOffTimer < countOffTime) return;
         _gameStarted = true;
         _countOffTimer = 0;
+        countOffPanel.SetActive(false);
+        RandomBlock.Instance.SpawnAtStart();
         SoundManager.Instance.PlayBGM(BGMTypes.Game, out _bgmAudioSource);
     }
 
@@ -273,6 +299,7 @@ public class GameManager : MonoBehaviour
 
     public void Retry()
     {
+        LoadSceneManager.Instance.Retry = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

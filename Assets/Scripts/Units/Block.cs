@@ -52,12 +52,15 @@ public class Block : MonoBehaviour
         _previousRotation = transform.eulerAngles.z;
     }
 
-    [Button("Test")]
+    
     /// <summary>
     /// Generate the schema of the block, 1 is an atom, 0 is empty
     /// </summary>
+    [Button("Test Schema")]
     public void GenerateSchema()
     {
+        Vector3 currentScale = transform.localScale;
+        transform.localScale = Vector3.one;
         Atom[] sortByX = Atoms.OrderByDescending(atom => atom.transform.position.x).ToArray();
         Atom[] sortByY = Atoms.OrderByDescending(atom => atom.transform.position.y).ToArray();
         Atom mostRight = sortByX.First();
@@ -79,6 +82,7 @@ public class Block : MonoBehaviour
         _blockSchemas.Add(originalSchema);
         _blockSchemas.Add(ArrayHelper.Rotate270(_blockSchemas[0]));
         _blockSchemas = _blockSchemas.Distinct().ToList(); //Remove duplicates
+        transform.localScale = currentScale;
     }
     
     public void RotateBlock(float angle)

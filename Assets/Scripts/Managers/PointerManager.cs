@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PointerManager : MonoBehaviour
 {
@@ -16,14 +17,14 @@ public class PointerManager : MonoBehaviour
             return _instance;
         }
     }
+    [SerializeField] private Camera gameCamera;
     private Block _selectedBlock;
-    private Camera _camera;
     private Vector3 _mousePositionDifference;
     public Vector3 MousePosition
     {
         get
         {
-            Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = gameCamera.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0;
             return mousePosition;
         }
@@ -32,7 +33,7 @@ public class PointerManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        _camera = Camera.main;
+        gameCamera = Camera.main;
     }
     
     void Update()
