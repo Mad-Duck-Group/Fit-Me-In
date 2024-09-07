@@ -131,7 +131,10 @@ public class RandomBlock : MonoBehaviour
     {
         DestroyBlock(true);
         SpawnRandomBlock();
-        GameOverCheck();
+        if (GameManager.Instance.CurrentReRoll <= 0)
+        {
+            GameOverCheck();
+        }
     }
     
 
