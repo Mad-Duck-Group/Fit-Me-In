@@ -36,7 +36,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private float bombTimeBonus = 10f;
-    
+
+    [Header("Reroll Settings")] 
+    [SerializeField] private TMP_Text reRollText;
+    [SerializeField] private int maxReRoll = 2;
+    [SerializeField] private int reRollScoreThreshold = 5000;
+
     [Header("Pause Settings")]
     [SerializeField] private GameObject pausePanel;
     
@@ -50,8 +55,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int scorePerCombo = 100;
     [SerializeField] private int scorePerBomb = 200;
     [SerializeField] private int scorePerFitMe = 10000;
-
-
+    
+    private int _currentReRoll;
+    private int _previousReRollScore;
     private float _currentGameTimer;
     private float _countOffTimer;
     private bool _isGameOver;
@@ -78,6 +84,7 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
         UpdateScoreText(false);
+        UpdateReRollText(false);
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.CountOff, out _);
     }
 
@@ -134,6 +141,9 @@ public class GameManager : MonoBehaviour
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.FitMeExplode, out _);
                 break;
         }
+        if (_score - _previousReRollScore < reRollScoreThreshold) return;
+        ChangeReRoll(1);
+        _previousReRollScore = _score;
     }
 
     /// <summary>
@@ -201,6 +211,34 @@ public class GameManager : MonoBehaviour
         {
             _countDownPlayed = false;
         }
+    }
+    
+    public void ChangeReRoll(int value)
+    {
+        int before = _currentReRoll;
+        _currentReRoll += value;
+        _currentReRoll = Mathf.Clamp(_currentReRoll, 0, maxReRoll);
+        if (_currentReRoll == before) return;
+        UpdateReRollText();
+    }
+    
+    private void UpdateReRollText(bool bump = true)
+    {
+        reRollText.text = "Reroll: " + _currentReRoll;
+        if (bump)
+        {
+            reRollText.transform.DOScale(1.2f, 0.1f).OnComplete(() =>
+            {
+                reRollText.transform.DOScale(1f, 0.1f);
+            });
+        }
+    }
+
+    public void ReRoll()
+    {
+        if (_currentReRoll <= 0) return;
+        ChangeReRoll(-1);
+        RandomBlock.Instance.ReRoll();
     }
     
     public void PauseGame()
