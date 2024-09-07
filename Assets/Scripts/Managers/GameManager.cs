@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
         }
         if (_score - _previousReRollScore < reRollScoreThreshold) return;
         ChangeReRoll(1);
-        _previousReRollScore = _score;
+        _previousReRollScore += reRollScoreThreshold;
     }
 
     /// <summary>
