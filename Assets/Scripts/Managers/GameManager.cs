@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
     
     public void ActivateScene()
     {
+        if (_sceneActivated) return;
         _sceneActivated = true;
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.CountOff, out _);
     }
@@ -271,6 +272,7 @@ public class GameManager : MonoBehaviour
     
     public void PauseGame()
     {
+        if (IsGameOver || !GameStarted) return;
         _isPaused = true;
         pausePanel.SetActive(true);
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.Pause, out _);
@@ -279,6 +281,7 @@ public class GameManager : MonoBehaviour
     
     public void ResumeGame()
     {
+        if (IsGameOver || !GameStarted) return;
         _isPaused = false;
         pausePanel.SetActive(false);
         SoundManager.Instance.ResumeSound(_bgmAudioSource);
@@ -307,12 +310,16 @@ public class GameManager : MonoBehaviour
     }
     public void BackToMenu()
     {
+        if (SceneManager.sceneCount > 1) return;
+        SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManager.LoadScene(SceneNames.MainMenu.ToString());
     }
 
     public void Retry()
     {
+        if (SceneManager.sceneCount > 1) return;
         LoadSceneManager.Instance.Retry = true;
+        SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

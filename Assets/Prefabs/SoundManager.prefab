@@ -47,29 +47,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolSize: 10
   audioMixerGroup: {fileID: 24300002, guid: bb123031e6207ed41aa44d646ad4fb10, type: 2}
-  buttonHover: {fileID: 8300000, guid: 290c2b00df926804db8c6e3ebc4621f3, type: 3}
-  buttonClick: {fileID: 8300000, guid: e224505697c75e9478ac9956acf9e4e6, type: 3}
-  volumeSlider: {fileID: 0}
-  sceneTransition: {fileID: 0}
-  countOff: {fileID: 0}
-  blockHover: {fileID: 0}
-  blockRotate: {fileID: 0}
-  blockPlaced: {fileID: 0}
-  blockCancel: {fileID: 0}
-  score: {fileID: 0}
-  scoreFitMe: {fileID: 0}
-  bonusTime: {fileID: 0}
-  bonusTimeFitMe: {fileID: 0}
-  bombAnnounce: {fileID: 0}
-  bombExplode: {fileID: 0}
-  fitMeAnnounce: {fileID: 0}
-  fitMeExplode: {fileID: 0}
-  tenSecondsLeft: {fileID: 0}
-  timeOut: {fileID: 0}
-  pause: {fileID: 0}
-  mainMenuBGM: {fileID: 0}
-  gameBGM: {fileID: 0}
-  leaderboardBGM: {fileID: 0}
+  buttonHover: {fileID: 8300000, guid: 9198caef65f204c41a29bf0f9377d77f, type: 3}
+  buttonClick: {fileID: 8300000, guid: a8b95940cdfcfa34a8844fa8982f7145, type: 3}
+  volumeSlider: {fileID: 8300000, guid: 9198caef65f204c41a29bf0f9377d77f, type: 3}
+  sceneTransition: {fileID: 8300000, guid: 61e7237bd20864048a775de862292a2b, type: 3}
+  countOff: {fileID: 8300000, guid: e0814b4e7bc958245b32014a5f5eafdd, type: 3}
+  blockHover: {fileID: 8300000, guid: 4d199a01a33d07445a6c9b2c11dea3e9, type: 3}
+  blockRotate: {fileID: 8300000, guid: c50c02a8dcec5684f845c81d3d2f616c, type: 3}
+  blockPlaced: {fileID: 8300000, guid: 0d7811cc273c0c749bbeb74f238a3be8, type: 3}
+  blockCancel: {fileID: 8300000, guid: 084dc8ffcc55ea047b82974989696f44, type: 3}
+  score: {fileID: 8300000, guid: 9b2b7b0db721d004e831084bd22e8382, type: 3}
+  scoreFitMe: {fileID: 8300000, guid: a9e1eb6ccdd02d7469c495448c761489, type: 3}
+  bonusTime: {fileID: 8300000, guid: 47b87b44a76b2b7428c7bd00f50de689, type: 3}
+  bonusTimeFitMe: {fileID: 8300000, guid: 1898569ec177c2740804e345f81abbee, type: 3}
+  bombAnnounce: {fileID: 8300000, guid: 1754462bdc639f341b3937e3c3103915, type: 3}
+  bombExplode: {fileID: 8300000, guid: 04cb002380765d0489c0a3919db81017, type: 3}
+  fitMeAnnounce: {fileID: 8300000, guid: 10110cded4f409942b835cb390ada771, type: 3}
+  fitMeExplode: {fileID: 8300000, guid: c7000bb1dfeb20f428cea52ebaf25cc1, type: 3}
+  tenSecondsLeft: {fileID: 8300000, guid: 47b87b44a76b2b7428c7bd00f50de689, type: 3}
+  timeOut: {fileID: 8300000, guid: 6d773233f815f8c4cab4b2144303ff38, type: 3}
+  pause: {fileID: 8300000, guid: 45a5f6692b5d5db4691cd93e482a1b6b, type: 3}
+  mainMenuBGM: {fileID: 8300000, guid: d7e1dbefdc22dbe43b4f0b1c4c077fe0, type: 3}
+  gameBGM: {fileID: 8300000, guid: 565813f61317b0d419d57064f239b981, type: 3}
+  leaderboardBGM: {fileID: 8300000, guid: 152f67608ef794c4db22a8a8c85ba897, type: 3}
 --- !u!81 &6062633838589746455
 AudioListener:
   m_ObjectHideFlags: 0

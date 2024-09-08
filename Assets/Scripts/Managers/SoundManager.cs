@@ -84,6 +84,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip leaderboardBGM;
     
     private List<AudioSource> _audioSources = new List<AudioSource>();
+    private float _masterVolume = 1f;
+    private AudioSource _volumeSliderAudioSource;
+    
+    public float MasterVolume => _masterVolume;
 
     private void Awake()
     {
@@ -119,6 +123,7 @@ public class SoundManager : MonoBehaviour
         GameObject soundGameObject = new GameObject($"AudioSource{_audioSources.Count}");
         soundGameObject.transform.SetParent(transform);
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = audioMixerGroup;
         _audioSources.Add(audioSource);
         audioSource.playOnAwake = false;
     }
@@ -298,5 +303,15 @@ public class SoundManager : MonoBehaviour
         }
         PlaySound(clip, out AudioSource source, loop, preset);
         audioSource = source;
+    }
+    
+    public void ChangeMixerVolume(float volume)
+    {
+        //translate the volume from 0-1 to -80-0
+        _masterVolume = volume;
+        volume = Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20;
+        audioMixerGroup.audioMixer.SetFloat("MasterVolume", volume);
+        if (_volumeSliderAudioSource && _volumeSliderAudioSource.isPlaying) return;
+        PlaySoundFX(SoundFXTypes.VolumeSlider, out _volumeSliderAudioSource);
     }
 }

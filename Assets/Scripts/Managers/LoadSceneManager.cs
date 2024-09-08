@@ -52,7 +52,7 @@ public class LoadSceneManager : MonoBehaviour
         }
         _firstSceneLoaded = SceneManager.GetActiveScene();
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {

@@ -24,6 +24,8 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] private Vector3 canvasSlideDistance;
     private List<PlayerEntry> _playerEntries = new List<PlayerEntry>();
     private Tween _notificationTween;
+    private Coroutine _loadMainMenuSceneCoroutine;
+    private AudioSource _bgmAudioSource;
     
     [Header("Debug")]
     [SerializeField] private string testUsername;
@@ -33,10 +35,14 @@ public class LeaderboardManager : MonoBehaviour
     {
         canvas.transform.localPosition -= canvasSlideDistance;
         Vector3 targetPosition = canvas.transform.localPosition + canvasSlideDistance;
-        canvas.transform.DOLocalMove(targetPosition, 2f).SetEase(Ease.OutQuint).OnComplete(() =>
+        canvas.transform.DOLocalMove(targetPosition, 3f).SetEase(Ease.OutQuart).OnComplete(() =>
         {
-            SceneManager.UnloadSceneAsync("Game");
+            if (SceneManager.GetSceneByName(SceneNames.Game.ToString()).isLoaded)
+                SceneManager.UnloadSceneAsync(SceneNames.Game.ToString());
+            if (SceneManager.GetSceneByName(SceneNames.MainMenu.ToString()).isLoaded)
+                SceneManager.UnloadSceneAsync(SceneNames.MainMenu.ToString());
         });
+        SoundManager.Instance.PlayBGM(BGMTypes.Leaderboard, out _bgmAudioSource);
         scoreText.text = LoadSceneManager.Instance.Score.ToString();
         notificationText.transform.localScale = Vector3.zero;
         notificationText.text = "";
@@ -198,12 +204,30 @@ public class LeaderboardManager : MonoBehaviour
     
     public void MainMenuButton()
     {
-        SceneManager.LoadScene(SceneNames.MainMenu.ToString());
+        if (SceneManager.sceneCount > 1) return;
+        if (_loadMainMenuSceneCoroutine != null) return;
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.SceneTransition, out _);
+        SoundManager.Instance.StopSound(_bgmAudioSource);
+        _loadMainMenuSceneCoroutine = StartCoroutine(LoadMainMenuScene());
     }
     
+    private IEnumerator LoadMainMenuScene()
+    {
+        AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(SceneNames.MainMenu.ToString(), LoadSceneMode.Additive);
+        while (!loadSceneAsync.isDone)
+        {
+            yield return null;
+        }
+        canvas.transform.DOLocalMove(canvasSlideDistance, 3f).SetEase(Ease.OutQuart).OnComplete(() =>
+        {
+            SceneManager.UnloadSceneAsync(SceneNames.Leaderboard.ToString());
+        });
+    }
     public void RetryButton()
     {
+        if (SceneManager.sceneCount > 1) return;
         LoadSceneManager.Instance.Retry = true;
+        SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManager.LoadScene(SceneNames.Game.ToString());
     }
 }

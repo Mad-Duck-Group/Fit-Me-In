@@ -18,6 +18,7 @@ public class Block : MonoBehaviour
 {
     [SerializeField] private BlockTypes blockType;
     [SerializeField] private Atom[] atoms;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private bool allowPickUpAfterPlacement = false;
 
     private List<int[,]> _blockSchemas = new List<int[,]>();
@@ -26,21 +27,19 @@ public class Block : MonoBehaviour
     private Vector3 _originalScale;
     private bool _isPlaced;
     private int _spawnIndex;
-    private float _previousRotation;
     private Tween _transformTween;
     private Coroutine _rotateCoroutine;
+    private bool _isDragging;
 
     public BlockTypes BlockType => blockType;
     public Vector3 OriginalPosition {get => _originalPosition; set => _originalPosition = value;}
     public Vector3 OriginalRotation {get => _originalRotation; set => _originalRotation = value;}
     public Vector3 OriginalScale {get => _originalScale; set => _originalScale = value;}
-    
+
     public List<int[,]> BlockSchemas => _blockSchemas;
     public Atom[] Atoms => atoms;
     public bool AllowPickUpAfterPlacement => allowPickUpAfterPlacement;
-    public bool IsPlaced {get => _isPlaced; set => _isPlaced = value;}
     public int SpawnIndex {get => _spawnIndex; set => _spawnIndex = value;}
-    public Coroutine RotateCoroutine => _rotateCoroutine;
 
     private void Start()
     {
@@ -48,7 +47,6 @@ public class Block : MonoBehaviour
         {
             atom.ParentBlock = this;
         }
-        _previousRotation = transform.eulerAngles.z;
     }
 
     
@@ -95,7 +93,7 @@ public class Block : MonoBehaviour
 
     private IEnumerator Rotate(float angle)
     {
-        if (IsPlaced) yield break;
+        if (_isPlaced) yield break;
         Vector3 currentRotation = transform.eulerAngles;
         float newAngle = currentRotation.z + angle;
         // if (_rotationTween.IsActive())
@@ -111,7 +109,6 @@ public class Block : MonoBehaviour
             transform.eulerAngles = Vector3.Lerp(currentRotation, new Vector3(0, 0, newAngle), timer / 0.1f);
             yield return null;
         }
-        _previousRotation = newAngle;
         _rotateCoroutine = null;
     }
 
@@ -150,9 +147,93 @@ public class Block : MonoBehaviour
     /// <param name="order">Order to render</param>
     public void SetRendererSortingOrder(int order)
     {
-        foreach (var atom in atoms)
+        if (!spriteRenderer)
         {
-            atom.SpriteRenderer.sortingOrder = order;
+            foreach (var atom in atoms)
+            {
+                atom.SpriteRenderer.sortingOrder = order;
+            }
+            return;
         }
+        spriteRenderer.sortingOrder = order;
+    }
+    
+    private void OnMouseEnter()
+    {
+        if (_isPlaced && !AllowPickUpAfterPlacement) return;
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) return;
+        if (_isDragging) return;
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockHover, out _);
+    }
+
+    private void OnMouseDrag()
+    {
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) return;
+        if (GameManager.Instance.IsGameOver)
+        {
+            StartCoroutine(OnMouseUp());
+            return;
+        }
+        if (_isPlaced && !AllowPickUpAfterPlacement) return;
+        HandleBlockManipulation();
+        GridManager.Instance.ValidatePlacement(this);
+        if (_isDragging) return; //Prevent unnecessary calculations
+        PointerManager.Instance.SelectBlock(this);
+        PickUpBlock();
+        GridManager.Instance.RemoveBlock(this);
+        _isDragging = true;
+    }
+
+    /// <summary>
+    /// Handle rotation of the block
+    /// </summary>
+    private void HandleBlockManipulation()
+    {
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     _parentBlock.transform.Rotate(0, 0, 90);
+        // }
+        if (Input.GetMouseButtonDown(1))
+        {
+            RotateBlock(-90);
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockRotate, out _);
+        }
+        // if (Input.GetKeyDown(KeyCode.F))
+        // {
+        //     var blockTransform = _parentBlock.transform;
+        //     var localScale = blockTransform.localScale;
+        //     localScale = new Vector3(localScale.x * -1,
+        //         localScale.y, localScale.z);
+        //     blockTransform.localScale = localScale;
+        // }
+    }
+    
+    private IEnumerator OnMouseUp()
+    {
+        if (!GameManager.Instance.GameStarted || GameManager.Instance.IsPaused) yield break;
+        if (!_isDragging) yield break;
+        PointerManager.Instance.DeselectBlock();
+        if (_rotateCoroutine != null)
+            yield return new WaitUntil(() => _rotateCoroutine == null);
+        if (GridManager.Instance.PlaceBlock(this))
+        {
+            _isPlaced = true;
+            SetRendererSortingOrder(1);
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockPlaced, out _);
+            RandomBlock.Instance.FreeSpawnPoint(_spawnIndex);
+            RandomBlock.Instance.DestroyBlock();
+            RandomBlock.Instance.SpawnRandomBlock();
+            if (GameManager.Instance.CurrentReRoll <= 0)
+            {
+                RandomBlock.Instance.GameOverCheck();
+            }
+        }
+        else
+        {
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.BlockCancel, out _);
+            ReturnToOriginal();
+            _isPlaced = false;
+        }
+        _isDragging = false;
     }
 }

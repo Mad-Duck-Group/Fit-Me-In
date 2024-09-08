@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.5274432, a: 1}
+  m_Color: {r: 1, g: 0.21568628, b: 0.49019608, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -129,7 +129,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -219,7 +219,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.5274432, a: 1}
+  m_Color: {r: 1, g: 0.21568628, b: 0.49019608, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -272,7 +272,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -296,6 +296,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2457922383365203404}
   - component: {fileID: 8293335298662665959}
+  - component: {fileID: 2606148014180242647}
+  - component: {fileID: -2547783174798133892}
   m_Layer: 0
   m_Name: Flip S
   m_TagString: Untagged
@@ -337,7 +339,126 @@ MonoBehaviour:
   - {fileID: 149818484042279996}
   - {fileID: 8019943756272038002}
   - {fileID: 2219597615295154391}
+  spriteRenderer: {fileID: 0}
   allowPickUpAfterPlacement: 0
+--- !u!50 &2606148014180242647
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5234665859416726602}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!66 &-2547783174798133892
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5234665859416726602}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 1
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 7206901643738584081}
+    m_ColliderPaths:
+    - - X: 10000000
+        Y: 5000000
+      - X: 0
+        Y: 5000000
+      - X: 0
+        Y: -5000000
+      - X: 10000000
+        Y: -5000000
+  - m_Collider: {fileID: 8269977207822383330}
+    m_ColliderPaths:
+    - - X: 10000000
+        Y: 15000000
+      - X: 0
+        Y: 15000000
+      - X: 0
+        Y: 5000000
+      - X: 10000000
+        Y: 5000000
+  - m_Collider: {fileID: 4508808915365498836}
+    m_ColliderPaths:
+    - - X: 0
+        Y: -5000000
+      - X: -10000000
+        Y: -5000000
+      - X: -10000000
+        Y: -15000000
+      - X: 0
+        Y: -15000000
+  - m_Collider: {fileID: 7988975449504834800}
+    m_ColliderPaths:
+    - - X: 0
+        Y: 5000000
+      - X: -10000000
+        Y: 5000000
+      - X: -10000000
+        Y: -5000000
+      - X: 0
+        Y: -5000000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: -0.000029300001, y: -1.5}
+      - {x: 0.0000294, y: -0.5}
+      - {x: 1, y: -0.4999707}
+      - {x: 0.99997073, y: 1.5}
+      - {x: 0, y: 1.4999707}
+      - {x: -0.0000294, y: 0.5}
+      - {x: -1, y: 0.4999707}
+      - {x: -0.99997073, y: -1.5}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 5234665859416726602}
 --- !u!1 &5519444948747345163
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +535,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.5274432, a: 1}
+  m_Color: {r: 1, g: 0.21568628, b: 0.49019608, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -467,7 +588,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -592,7 +713,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.5274432, a: 1}
+  m_Color: {r: 1, g: 0.21568628, b: 0.49019608, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -645,7 +766,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
