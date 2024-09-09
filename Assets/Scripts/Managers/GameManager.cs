@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     
     [Header("Game Over Settings")]
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private TMP_Text gameOverScoreText;
+    [SerializeField] private TMP_Text gameOverText;
     
     [Header("Score Settings")]
     [SerializeField] private TMP_Text scoreText;
@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
     {
         _currentGameTimer = gameTimer;
         gameOverPanel.SetActive(false);
+        gameOverPanel.transform.localScale = Vector3.zero;
         pausePanel.SetActive(false);
         countOffPanel.SetActive(true);
         UpdateScoreText(false);
@@ -136,14 +137,14 @@ public class GameManager : MonoBehaviour
             case ScoreTypes.Placement:
                 ChangeScore(scorePerPlacement);
                 Debug.Log("Placement Score: " + scorePerPlacement);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.Score, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.Score, out _);
                 break;
             case ScoreTypes.Combo:
                 if (contactedAmount <= 1) return;
                 int score = scorePerCombo * (contactedAmount - 1);
                 Debug.Log("Combo Score: " + score);
                 ChangeScore(score);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.Score, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.Score, out _);
                 break;
             case ScoreTypes.Bomb:
                 if (contactedAmount <= 2) return;
@@ -151,18 +152,18 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Bomb Score: " + bombScore);
                 ChangeScore(bombScore);
                 ChangeGameTimer(bombTimeBonus);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.Score, out _);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.BonusTime, out _);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.BombAnnounce, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.Score, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.BonusTime, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.BombAnnounce, out _);
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.BombExplode, out _);
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.Congrats, out _);
                 break;
             case ScoreTypes.FitMe:
                 ChangeScore(scorePerFitMe);
                 ChangeGameTimer(gameTimer);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.ScoreFitMe, out _);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.BonusTimeFitMe, out _);
-                SoundManager.Instance.PlaySoundFX(SoundFXTypes.FitMeAnnounce, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.ScoreFitMe, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.BonusTimeFitMe, out _);
+                //SoundManager.Instance.PlaySoundFX(SoundFXTypes.FitMeAnnounce, out _);
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.FitMeExplode, out _);
                 break;
         }
@@ -306,13 +307,22 @@ public class GameManager : MonoBehaviour
         if (_leaderboardCoroutine != null) return;
         _isGameOver = true;
         _currentGameTimer = 0;
-        if (fail) SoundManager.Instance.PlaySoundFX(SoundFXTypes.Fail, out _);
-        else SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeOut, out _);
         SoundManager.Instance.StopSound(_bgmAudioSource);
+        gameOverText.text = fail ? "Failed!" : "Time's Up!";
+        gameOverPanel.SetActive(true);
+        gameOverPanel.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
+        StartCoroutine(GameOverCoroutine(fail));
+    }
+
+    private IEnumerator GameOverCoroutine(bool fail = false)
+    {
+        AudioSource temp;
+        if (fail) SoundManager.Instance.PlaySoundFX(SoundFXTypes.Fail, out temp);
+        else SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeOut, out temp);
+        yield return new WaitForSeconds(temp.clip.length);
         LoadSceneManager.Instance.Score = _score;
         _leaderboardCoroutine = StartCoroutine(LoadLeaderboard());
     }
-    
     private IEnumerator LoadLeaderboard()
     {
         AsyncOperation loadSceneAsync = SceneManager.LoadSceneAsync(SceneNames.Leaderboard.ToString(), LoadSceneMode.Additive);

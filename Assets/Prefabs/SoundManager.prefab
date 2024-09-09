@@ -47,9 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolSize: 10
   audioMixerGroup: {fileID: 24300002, guid: bb123031e6207ed41aa44d646ad4fb10, type: 2}
-  buttonHover: {fileID: 8300000, guid: 9198caef65f204c41a29bf0f9377d77f, type: 3}
-  buttonClick: {fileID: 8300000, guid: a8b95940cdfcfa34a8844fa8982f7145, type: 3}
-  volumeSlider: {fileID: 8300000, guid: 9198caef65f204c41a29bf0f9377d77f, type: 3}
+  buttonHover: {fileID: 8300000, guid: 4069bcf3d77ff06429ff1be03dca4f8b, type: 3}
+  buttonClick: {fileID: 8300000, guid: 59eb59a329a5b0a4fa74c1ab78b99372, type: 3}
+  volumeSlider: {fileID: 8300000, guid: 4069bcf3d77ff06429ff1be03dca4f8b, type: 3}
   sceneTransition: {fileID: 8300000, guid: 61e7237bd20864048a775de862292a2b, type: 3}
   countOff: {fileID: 8300000, guid: e0814b4e7bc958245b32014a5f5eafdd, type: 3}
   blockHover: {fileID: 8300000, guid: 4d199a01a33d07445a6c9b2c11dea3e9, type: 3}
@@ -88,7 +88,7 @@ MonoBehaviour:
   nameTag: {fileID: 8300000, guid: 376189840f7830f4fa005cf181de3404, type: 3}
   mainMenuBGM: {fileID: 8300000, guid: d7e1dbefdc22dbe43b4f0b1c4c077fe0, type: 3}
   gameBGM: {fileID: 8300000, guid: 565813f61317b0d419d57064f239b981, type: 3}
-  tenSecondsLeftBGM: {fileID: 8300000, guid: 56bc81f23c66beb4493bc3c28d9b9a5e, type: 3}
+  tenSecondsLeftBGM: {fileID: 8300000, guid: bf007c151257a7742a08301a5272518f, type: 3}
   leaderboardBGM: {fileID: 8300000, guid: 152f67608ef794c4db22a8a8c85ba897, type: 3}
 --- !u!81 &6062633838589746455
 AudioListener:
