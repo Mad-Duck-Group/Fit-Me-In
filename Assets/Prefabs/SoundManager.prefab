@@ -64,11 +64,31 @@ MonoBehaviour:
   bombExplode: {fileID: 8300000, guid: 04cb002380765d0489c0a3919db81017, type: 3}
   fitMeAnnounce: {fileID: 8300000, guid: 10110cded4f409942b835cb390ada771, type: 3}
   fitMeExplode: {fileID: 8300000, guid: c7000bb1dfeb20f428cea52ebaf25cc1, type: 3}
-  tenSecondsLeft: {fileID: 8300000, guid: 47b87b44a76b2b7428c7bd00f50de689, type: 3}
-  timeOut: {fileID: 8300000, guid: 6d773233f815f8c4cab4b2144303ff38, type: 3}
+  reRollGain: {fileID: 8300000, guid: 0d57d0d2bd0eb0b4ab46ec71e36b3c0b, type: 3}
+  reRollLose: {fileID: 8300000, guid: c3d08301a62f3d746828523b97f1b058, type: 3}
+  congrats:
+  - {fileID: 8300000, guid: 1fd8efb2d547f7c40903bd8ac62071a7, type: 3}
+  - {fileID: 8300000, guid: 097c5e6a32010774bbf4a72be30822c7, type: 3}
+  - {fileID: 8300000, guid: 12c9f353efefa7b49ad7a02cfae9279d, type: 3}
+  fail: {fileID: 8300000, guid: 6d773233f815f8c4cab4b2144303ff38, type: 3}
+  timeOut: {fileID: 8300000, guid: 78e2e69bb812a59448877197aa9ea36e, type: 3}
   pause: {fileID: 8300000, guid: 45a5f6692b5d5db4691cd93e482a1b6b, type: 3}
+  tricky: {fileID: 8300000, guid: 7bb862709c1e56141af8975d2d758b2e, type: 3}
+  anxious: {fileID: 8300000, guid: a897d2fb279d20447a9435c200e6399b, type: 3}
+  trio: {fileID: 8300000, guid: 890c3d5ef75acc8438d36a0245b004d9, type: 3}
+  aweary: {fileID: 8300000, guid: 0163b569a63c1f4409a5a70fd8126795, type: 3}
+  handsome: {fileID: 8300000, guid: edca858a26eb44646b6c2c7b239ad748, type: 3}
+  pretty: {fileID: 8300000, guid: 351e1716edc72354da954f4ddba56aa2, type: 3}
+  silly: {fileID: 8300000, guid: 82201f28b05add34c8f9f60d333ab20c, type: 3}
+  overflow: {fileID: 8300000, guid: dce1b312c33c18b468f4ece73608b5c2, type: 3}
+  madness: {fileID: 8300000, guid: a16f187a826796541bbd305ded45897f, type: 3}
+  mike: {fileID: 8300000, guid: 4dc39b777d506314aa2fc0488252da86, type: 3}
+  celebrate: {fileID: 8300000, guid: da4404596515b69428dc90f6799872e4, type: 3}
+  newHighScore: {fileID: 8300000, guid: eaa6d44c11d452d40a69dcd9d83d5bbf, type: 3}
+  nameTag: {fileID: 8300000, guid: 376189840f7830f4fa005cf181de3404, type: 3}
   mainMenuBGM: {fileID: 8300000, guid: d7e1dbefdc22dbe43b4f0b1c4c077fe0, type: 3}
   gameBGM: {fileID: 8300000, guid: 565813f61317b0d419d57064f239b981, type: 3}
+  tenSecondsLeftBGM: {fileID: 8300000, guid: 56bc81f23c66beb4493bc3c28d9b9a5e, type: 3}
   leaderboardBGM: {fileID: 8300000, guid: 152f67608ef794c4db22a8a8c85ba897, type: 3}
 --- !u!81 &6062633838589746455
 AudioListener:

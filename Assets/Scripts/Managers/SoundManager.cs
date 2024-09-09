@@ -24,15 +24,22 @@ public enum SoundFXTypes
     BombExplode,
     FitMeAnnounce,
     FitMeExplode,
-    TenSecondsLeft,
+    ReRollGain,
+    ReRollLose,
+    Congrats,
+    Fail,
     TimeOut,
-    Pause
+    Pause,
+    Celebrate,
+    NewHighScore,
+    NameTag
 }
 
 public enum BGMTypes
 {
     MainMenu,
     Game,
+    TenSecondsLeft,
     Leaderboard
 }
 public class SoundManager : MonoBehaviour
@@ -74,13 +81,34 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip bombExplode;
     [SerializeField] private AudioClip fitMeAnnounce;
     [SerializeField] private AudioClip fitMeExplode;
-    [SerializeField] private AudioClip tenSecondsLeft;
+    [SerializeField] private AudioClip reRollGain;
+    [SerializeField] private AudioClip reRollLose;
+    [SerializeField] private AudioClip[] congrats;
+    [SerializeField] private AudioClip fail;
     [SerializeField] private AudioClip timeOut;
     [SerializeField] private AudioClip pause;
     
+    [Header("Block Face FX")] 
+    [SerializeField] private AudioClip tricky;
+    [SerializeField] private AudioClip anxious;
+    [SerializeField] private AudioClip trio;
+    [SerializeField] private AudioClip aweary;
+    [SerializeField] private AudioClip handsome;
+    [SerializeField] private AudioClip pretty;
+    [SerializeField] private AudioClip silly;
+    [SerializeField] private AudioClip overflow;
+    [SerializeField] private AudioClip madness;
+    [SerializeField] private AudioClip mike;
+    
+    [Header("Leaderboard FX")]
+    [SerializeField] private AudioClip celebrate;
+    [SerializeField] private AudioClip newHighScore;
+    [SerializeField] private AudioClip nameTag;
+
     [Header("BGM")]
     [SerializeField] private AudioClip mainMenuBGM;
     [SerializeField] private AudioClip gameBGM;
+    [SerializeField] private AudioClip tenSecondsLeftBGM;
     [SerializeField] private AudioClip leaderboardBGM;
     
     private List<AudioSource> _audioSources = new List<AudioSource>();
@@ -272,14 +300,72 @@ public class SoundManager : MonoBehaviour
             case SoundFXTypes.FitMeExplode:
                 clip = fitMeExplode;
                 break;
-            case SoundFXTypes.TenSecondsLeft:
-                clip = tenSecondsLeft;
+            case SoundFXTypes.ReRollGain:
+                clip = reRollGain;
+                break;
+            case SoundFXTypes.ReRollLose:
+                clip = reRollLose;
+                break;
+            case SoundFXTypes.Congrats:
+                clip = congrats[UnityEngine.Random.Range(0, congrats.Length)];
+                break;
+            case SoundFXTypes.Fail:
+                clip = fail;
                 break;
             case SoundFXTypes.TimeOut:
                 clip = timeOut;
                 break;
             case SoundFXTypes.Pause:
                 clip = pause;
+                break;
+            case SoundFXTypes.Celebrate:
+                clip = celebrate;
+                break;
+            case SoundFXTypes.NewHighScore:
+                clip = newHighScore;
+                break;
+            case SoundFXTypes.NameTag:
+                clip = nameTag;
+                break;
+        }
+        PlaySound(clip, out AudioSource source, loop, preset);
+        audioSource = source;
+    }
+    
+    public void PlayBlockFaceFX(BlockFaces blockFace, out AudioSource audioSource, bool loop = false, AudioSource preset = null)
+    {
+        AudioClip clip = null;
+        switch (blockFace)
+        {
+            case BlockFaces.Tricky:
+                clip = tricky;
+                break;
+            case BlockFaces.Anxious:
+                clip = anxious;
+                break;
+            case BlockFaces.Trio:
+                clip = trio;
+                break;
+            case BlockFaces.Aweary:
+                clip = aweary;
+                break;
+            case BlockFaces.Handsome:
+                clip = handsome;
+                break;
+            case BlockFaces.Pretty:
+                clip = pretty;
+                break;
+            case BlockFaces.Silly:
+                clip = silly;
+                break;
+            case BlockFaces.Overflow:
+                clip = overflow;
+                break;
+            case BlockFaces.Madness:
+                clip = madness;
+                break;
+            case BlockFaces.Mike:
+                clip = mike;
                 break;
         }
         PlaySound(clip, out AudioSource source, loop, preset);
@@ -296,6 +382,9 @@ public class SoundManager : MonoBehaviour
                 break;
             case BGMTypes.Game:
                 clip = gameBGM;
+                break;
+            case BGMTypes.TenSecondsLeft:
+                clip = tenSecondsLeftBGM;
                 break;
             case BGMTypes.Leaderboard:
                 clip = leaderboardBGM;

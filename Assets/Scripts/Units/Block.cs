@@ -14,9 +14,24 @@ public enum BlockTypes
     Pan,
     Sankaya
 }
+
+public enum BlockFaces
+{
+    Tricky,
+    Anxious,
+    Trio,
+    Aweary,
+    Handsome,
+    Pretty,
+    Silly,
+    Overflow,
+    Madness,
+    Mike
+}
 public class Block : MonoBehaviour
 {
     [SerializeField] private BlockTypes blockType;
+    [SerializeField] private BlockFaces blockFace;
     [SerializeField] private Atom[] atoms;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private bool allowPickUpAfterPlacement = false;
@@ -181,6 +196,7 @@ public class Block : MonoBehaviour
         PointerManager.Instance.SelectBlock(this);
         PickUpBlock();
         GridManager.Instance.RemoveBlock(this);
+        SoundManager.Instance.PlayBlockFaceFX(blockFace, out _);
         _isDragging = true;
     }
 

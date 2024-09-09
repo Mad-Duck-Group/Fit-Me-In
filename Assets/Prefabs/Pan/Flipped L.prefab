@@ -396,6 +396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockType: 2
+  blockFace: 4
   atoms:
   - {fileID: 4549571505435996439}
   - {fileID: 1793801434442734130}

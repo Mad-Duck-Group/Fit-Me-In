@@ -59,10 +59,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void ExitGame()
     {
-#if UNITY_EDITOR
+#if (UNITY_EDITOR)
         UnityEditor.EditorApplication.isPlaying = false;
+#elif (UNITY_STANDALONE) 
+    Application.Quit();
+#elif (UNITY_WEBGL)
+    Application.OpenURL("https://madduckteam.itch.io");
 #endif
-        Application.Quit();
     }
 
     public void ToLeaderboard()

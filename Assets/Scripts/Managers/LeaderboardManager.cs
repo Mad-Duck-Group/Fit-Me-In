@@ -14,6 +14,7 @@ public class LeaderboardManager : MonoBehaviour
 {
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private TMP_Text newHighScoreText;
     [SerializeField] private TMP_Text notificationText;
     [SerializeField] private float notificationDuration = 3f;
     [SerializeField] private TMP_InputField usernameInput;
@@ -23,6 +24,7 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] private GameObject canvas;
     [SerializeField] private Vector3 canvasSlideDistance;
     private List<PlayerEntry> _playerEntries = new List<PlayerEntry>();
+    private PlayerEntry _selfEntry;
     private Tween _notificationTween;
     private Coroutine _loadMainMenuSceneCoroutine;
     private AudioSource _bgmAudioSource;
@@ -43,16 +45,24 @@ public class LeaderboardManager : MonoBehaviour
                 SceneManager.UnloadSceneAsync(SceneNames.MainMenu.ToString());
         });
         SoundManager.Instance.PlayBGM(BGMTypes.Leaderboard, out _bgmAudioSource);
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.Celebrate, out _);
+        newHighScoreText.gameObject.SetActive(false);
         scoreText.text = LoadSceneManager.Instance.Score.ToString();
         notificationText.transform.localScale = Vector3.zero;
         notificationText.text = "";
+        CheckNewHighScore();
         GetEntries();
     }
     
-    [Button("Test Get Entries")]
-    public void GetEntries()
+    private void CheckNewHighScore()
     {
-        Leaderboards.FitMeIn.GetEntries(OnGetEntries, OnGetEntriesFailed);
+        GetPersonalEntry(true);
+    }
+    
+    [Button("Test Get Entries")]
+    public void GetEntries(bool scrollToSelf = false)
+    {
+        Leaderboards.FitMeIn.GetEntries(a => OnGetEntries(a, scrollToSelf), OnGetEntriesFailed);
     }
     
     public void RefreshButton()
@@ -97,9 +107,9 @@ public class LeaderboardManager : MonoBehaviour
         DeleteEntry();
     }
     
-    public void GetPersonalEntry()
+    public void GetPersonalEntry(bool checkNewHighScore = false)
     {
-        Leaderboards.FitMeIn.GetPersonalEntry(OnPersonalEntryLoaded, OnGetEntriesFailed);
+        Leaderboards.FitMeIn.GetPersonalEntry((a) => OnPersonalEntryLoaded(a, checkNewHighScore), OnGetEntriesFailed);
     }
     
     public void PersonalButton()
@@ -116,13 +126,27 @@ public class LeaderboardManager : MonoBehaviour
         _playerEntries.Clear();
     }
     
-    private void OnGetEntries(Entry[] entries)
+    private void OnGetEntries(Entry[] entries, bool scrollToSelf = false)
     {
         ResetEntriesView();
         for (var i = 0; i < maxEntries; i++)
         {
             if (i >= entries.Length) break;
             CreateEntryDisplay(entries[i]);
+        }
+        if (!scrollToSelf) return;
+        //scroll to self entry
+        if (_selfEntry && _playerEntries.Contains(_selfEntry))
+        {
+            Canvas.ForceUpdateCanvases();
+            float normalizedPosition =
+                1 - (_playerEntries.FindIndex(a => _selfEntry == a) / (float)(_playerEntries.Count - 1));
+            scrollRect.verticalNormalizedPosition = normalizedPosition;
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.NameTag, out _);
+        }
+        else
+        {
+            ShowNotification("You are not on the top 50 list...");
         }
     }
     
@@ -134,6 +158,7 @@ public class LeaderboardManager : MonoBehaviour
         bool isMine = entry.IsMine();
         if (isMine)
         {
+            _selfEntry = newPlayerEntry;
             newPlayerEntry.SetTextColor(selfEntryColor);
         }
     }
@@ -148,7 +173,7 @@ public class LeaderboardManager : MonoBehaviour
     {
         if (success)
         {
-            GetEntries();
+            GetEntries(true);
         }
     }
     
@@ -172,8 +197,15 @@ public class LeaderboardManager : MonoBehaviour
         ShowNotification($"{error}Deleting entry failed!");
     }
     
-    private void OnPersonalEntryLoaded(Entry entry)
+    private void OnPersonalEntryLoaded(Entry entry, bool checkNewHighScore = false)
     {
+        if (checkNewHighScore)
+        {
+            if (LoadSceneManager.Instance.Score < entry.Score) return;
+            newHighScoreText.gameObject.SetActive(true);
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.NewHighScore, out _);
+            return;
+        }
         if (entry.Rank == 0)
         {
             ShowNotification("No personal entry found");
@@ -181,6 +213,7 @@ public class LeaderboardManager : MonoBehaviour
         }
         ResetEntriesView();
         CreateEntryDisplay(entry);
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.NameTag, out _);
     }
     
     private void ShowNotification(string message)
@@ -208,6 +241,7 @@ public class LeaderboardManager : MonoBehaviour
         if (_loadMainMenuSceneCoroutine != null) return;
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.SceneTransition, out _);
         SoundManager.Instance.StopSound(_bgmAudioSource);
+        LoadSceneManager.Instance.Score = 0;
         _loadMainMenuSceneCoroutine = StartCoroutine(LoadMainMenuScene());
     }
     
@@ -227,6 +261,7 @@ public class LeaderboardManager : MonoBehaviour
     {
         if (SceneManager.sceneCount > 1) return;
         LoadSceneManager.Instance.Retry = true;
+        LoadSceneManager.Instance.Score = 0;
         SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManager.LoadScene(SceneNames.Game.ToString());
     }

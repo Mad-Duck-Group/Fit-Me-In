@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Pause Settings")]
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private Slider volumeSlider;
     
     [Header("Game Over Settings")]
     [SerializeField] private GameObject gameOverPanel;
@@ -91,6 +92,11 @@ public class GameManager : MonoBehaviour
         countOffPanel.SetActive(true);
         UpdateScoreText(false);
         UpdateReRollText(false);
+        volumeSlider.value = SoundManager.Instance.MasterVolume;
+        volumeSlider.onValueChanged.AddListener((_) =>
+        {
+            SoundManager.Instance.ChangeMixerVolume(volumeSlider.value);
+        });
         if (LoadSceneManager.Instance.FirstSceneLoaded == SceneManager.GetActiveScene() || LoadSceneManager.Instance.Retry)
         {
             ActivateScene();
@@ -149,6 +155,7 @@ public class GameManager : MonoBehaviour
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.BonusTime, out _);
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.BombAnnounce, out _);
                 SoundManager.Instance.PlaySoundFX(SoundFXTypes.BombExplode, out _);
+                SoundManager.Instance.PlaySoundFX(SoundFXTypes.Congrats, out _);
                 break;
             case ScoreTypes.FitMe:
                 ChangeScore(scorePerFitMe);
@@ -160,6 +167,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         if (_score - _previousReRollScore < reRollScoreThreshold) return;
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.ReRollGain, out _);
         ChangeReRoll(1);
         _previousReRollScore += reRollScoreThreshold;
     }
@@ -214,10 +222,19 @@ public class GameManager : MonoBehaviour
         timerSlider.value = _currentGameTimer / gameTimer;
         Color color = Color.Lerp(endColor, startColor, _currentGameTimer / gameTimer);
         timerFill.color = color;
-        if (_currentGameTimer <= 10 && !_countDownPlayed)
+        switch (_currentGameTimer)
         {
-            SoundManager.Instance.PlaySoundFX(SoundFXTypes.TenSecondsLeft, out _);
-            _countDownPlayed = true;
+            case > 10 when _countDownPlayed:
+                Debug.Log("play game bgm");
+                SoundManager.Instance.StopSound(_bgmAudioSource);
+                SoundManager.Instance.PlayBGM(BGMTypes.Game, out _bgmAudioSource);
+                _countDownPlayed = false;
+                break;
+            case <= 10 when !_countDownPlayed:
+                SoundManager.Instance.StopSound(_bgmAudioSource);
+                SoundManager.Instance.PlayBGM(BGMTypes.TenSecondsLeft, out _bgmAudioSource);
+                _countDownPlayed = true;
+                break;
         }
         if (_currentGameTimer <= 0)
         {
@@ -235,10 +252,6 @@ public class GameManager : MonoBehaviour
             {
                 timerSlider.transform.DOScale(1f, 0.1f);
             });
-        }
-        if (_currentGameTimer > 10)
-        {
-            _countDownPlayed = false;
         }
     }
     
@@ -268,6 +281,7 @@ public class GameManager : MonoBehaviour
         if (_currentReRoll <= 0) return;
         ChangeReRoll(-1);
         RandomBlock.Instance.ReRoll();
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.ReRollLose, out _);
     }
     
     public void PauseGame()
@@ -286,15 +300,14 @@ public class GameManager : MonoBehaviour
         pausePanel.SetActive(false);
         SoundManager.Instance.ResumeSound(_bgmAudioSource);
     }
-    
-    public void GameOver()
+
+    public void GameOver(bool fail = false)
     {
         if (_leaderboardCoroutine != null) return;
         _isGameOver = true;
         _currentGameTimer = 0;
-        // gameOverPanel.SetActive(true);
-        // gameOverScoreText.text = "Score: " + _score;
-        SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeOut, out _);
+        if (fail) SoundManager.Instance.PlaySoundFX(SoundFXTypes.Fail, out _);
+        else SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeOut, out _);
         SoundManager.Instance.StopSound(_bgmAudioSource);
         LoadSceneManager.Instance.Score = _score;
         _leaderboardCoroutine = StartCoroutine(LoadLeaderboard());

@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockType: 0
+  blockFace: 9
   atoms:
   - {fileID: 7826244748940250820}
   - {fileID: 9162279052328029448}
