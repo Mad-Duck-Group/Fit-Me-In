@@ -13,7 +13,7 @@ public class PlayerEntry : MonoBehaviour
     {
         rankText.text = rank.ToString();
         nameText.text = playerName;
-        scoreText.text = score.ToString();
+        scoreText.text = score.ToString("N0");
     }
     
     public void SetTextColor(Color color)

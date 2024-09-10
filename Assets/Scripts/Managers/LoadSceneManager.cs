@@ -31,7 +31,7 @@ public class LoadSceneManager : MonoBehaviour
     public bool Retry {get => _retry; set => _retry = value; }
     private int _score;
     public int Score { get => _score; set => _score = value; }
-    
+
     private void Awake()
     {
         List<LoadSceneManager> loadSceneManagers = FindObjectsOfType<LoadSceneManager>().ToList();

@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text countOffText;
 
     [Header("Reroll Settings")] 
+    [SerializeField] private Button reRollButton;
     [SerializeField] private TMP_Text reRollText;
     [SerializeField] private int maxReRoll = 2;
     [SerializeField] private int reRollScoreThreshold = 5000;
@@ -93,11 +94,13 @@ public class GameManager : MonoBehaviour
         countOffPanel.SetActive(true);
         UpdateScoreText(false);
         UpdateReRollText(false);
+        reRollButton.interactable = false;
         volumeSlider.value = SoundManager.Instance.MasterVolume;
         volumeSlider.onValueChanged.AddListener((_) =>
         {
             SoundManager.Instance.ChangeMixerVolume(volumeSlider.value);
         });
+        volumeSlider.gameObject.SetActive(false);
         if (LoadSceneManager.Instance.FirstSceneLoaded == SceneManager.GetActiveScene() || LoadSceneManager.Instance.Retry)
         {
             ActivateScene();
@@ -168,8 +171,8 @@ public class GameManager : MonoBehaviour
                 break;
         }
         if (_score - _previousReRollScore < reRollScoreThreshold) return;
-        SoundManager.Instance.PlaySoundFX(SoundFXTypes.ReRollGain, out _);
-        ChangeReRoll(1);
+        int reRoll = Mathf.FloorToInt((_score - _previousReRollScore) / (float)reRollScoreThreshold);
+        if (ChangeReRoll(reRoll)) SoundManager.Instance.PlaySoundFX(SoundFXTypes.ReRollGain, out _);
         _previousReRollScore += reRollScoreThreshold;
     }
 
@@ -186,7 +189,8 @@ public class GameManager : MonoBehaviour
                 scoreText.transform.DOScale(1f, 0.1f);
             });
         }
-        scoreText.text = "Score: " + _score;
+
+        scoreText.text = _score.ToString("N0");
     }
     
     /// <summary>
@@ -226,7 +230,6 @@ public class GameManager : MonoBehaviour
         switch (_currentGameTimer)
         {
             case > 10 when _countDownPlayed:
-                Debug.Log("play game bgm");
                 SoundManager.Instance.StopSound(_bgmAudioSource);
                 SoundManager.Instance.PlayBGM(BGMTypes.Game, out _bgmAudioSource);
                 _countDownPlayed = false;
@@ -256,18 +259,20 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void ChangeReRoll(int value)
+    public bool ChangeReRoll(int value)
     {
         int before = _currentReRoll;
         _currentReRoll += value;
         _currentReRoll = Mathf.Clamp(_currentReRoll, 0, maxReRoll);
-        if (_currentReRoll == before) return;
+        reRollButton.interactable = _currentReRoll > 0;
+        if (_currentReRoll == before) return false;
         UpdateReRollText();
+        return true;
     }
     
     private void UpdateReRollText(bool bump = true)
     {
-        reRollText.text = "Reroll: " + _currentReRoll;
+        reRollText.text = $"{_currentReRoll}/{maxReRoll}";
         if (bump)
         {
             reRollText.transform.DOScale(1.2f, 0.1f).OnComplete(() =>
@@ -280,9 +285,8 @@ public class GameManager : MonoBehaviour
     public void ReRoll()
     {
         if (_currentReRoll <= 0) return;
-        ChangeReRoll(-1);
+        if (ChangeReRoll(-1)) SoundManager.Instance.PlaySoundFX(SoundFXTypes.ReRollLose, out _);
         RandomBlock.Instance.ReRoll();
-        SoundManager.Instance.PlaySoundFX(SoundFXTypes.ReRollLose, out _);
     }
     
     public void PauseGame()
@@ -344,5 +348,10 @@ public class GameManager : MonoBehaviour
         LoadSceneManager.Instance.Retry = true;
         SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    public void ToggleVolumeSlider()
+    {
+        volumeSlider.gameObject.SetActive(!volumeSlider.gameObject.activeSelf);
     }
 }
