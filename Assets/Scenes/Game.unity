@@ -2583,16 +2583,16 @@ MonoBehaviour:
     _serializedList:
     - Key: 0
       Value:
-        eventName: sessionLengthEvent
-        parameterName: sessionLength
+        eventName: SessionLengthEvent
+        parameterName: SessionLengthPar
     - Key: 1
       Value:
-        eventName: asdasdasd
-        parameterName: asdasda
+        eventName: FitMeAmountEvent
+        parameterName: FitMeAmountPar
     - Key: 2
       Value:
-        eventName: fgasdgag
-        parameterName: asgag
+        eventName: BlockRandomizationEvent
+        parameterName: BlockRandomizationPar
 --- !u!4 &814796781
 Transform:
   m_ObjectHideFlags: 0
