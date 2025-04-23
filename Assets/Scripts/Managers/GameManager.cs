@@ -78,8 +78,12 @@ public class GameManager : MonoBehaviour
     public bool GameStarted => _gameStarted;
     public bool IsPaused => _isPaused;
     public int CurrentReRoll => _currentReRoll;
-    // Start is called before the first frame update
-
+    
+    //Analytics
+    private float _sessionTime;
+    private int _fitMeAmount;
+    //
+    
     private void Awake()
     {
         _instance = this;
@@ -119,8 +123,15 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (!_sceneActivated) return;
+        UpdateSessionTimer();
         UpdateCountOff();
         UpdateGameTimer();
+    }
+
+    private void UpdateSessionTimer()
+    {
+        if (!GameStarted || IsGameOver || IsPaused) return;
+        _sessionTime += Time.deltaTime;
     }
     
     /// <summary>
@@ -164,6 +175,7 @@ public class GameManager : MonoBehaviour
             case ScoreTypes.FitMe:
                 ChangeScore(scorePerFitMe);
                 ChangeGameTimer(gameTimer);
+                _fitMeAmount++;
                 //SoundManager.Instance.PlaySoundFX(SoundFXTypes.ScoreFitMe, out _);
                 //SoundManager.Instance.PlaySoundFX(SoundFXTypes.BonusTimeFitMe, out _);
                 //SoundManager.Instance.PlaySoundFX(SoundFXTypes.FitMeAnnounce, out _);
@@ -315,6 +327,9 @@ public class GameManager : MonoBehaviour
         gameOverText.text = fail ? "Failed!" : "Time's Up!";
         gameOverPanel.SetActive(true);
         gameOverPanel.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
+        AnalyticManager.Instance.OnSessionEnd(_fitMeAmount, _sessionTime);
+        _fitMeAmount = 0;
+        _sessionTime = 0;
         StartCoroutine(GameOverCoroutine(fail));
     }
 

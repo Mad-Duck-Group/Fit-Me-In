@@ -93,6 +93,7 @@ public class RandomBlock : MonoBehaviour
             Transform spawnTransform = spawnPoints[i].Transform;
             int randomIndex = Random.Range(0, _randomObjects.Count);
             Block spawn = Instantiate(_randomObjects[randomIndex], spawnTransform.position, Quaternion.identity).GetComponent<Block>();
+            AnalyticManager.Instance.OnRandomBlock(spawn.BlockType);
             _randomObjects.RemoveAt(randomIndex);
             spawn.SpawnIndex = i;
             spawn.transform.localScale = Vector3.zero;
