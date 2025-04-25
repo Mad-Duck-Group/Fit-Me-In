@@ -54,7 +54,8 @@ public class AnalyticManager : MonoSingleton<AnalyticManager>
     public void OnSessionEnd(int fitMeAmount, float sessionTime)
     {
         var lengthData = CreateEventData(EventType.SessionLength, sessionTime);
-        var fitMeData = CreateEventData(EventType.FitMeAmount,fitMeAmount);
+        Debug.Log($"Fit Me Amount {fitMeAmount}");
+        var fitMeData = CreateEventData(EventType.FitMeAmount, fitMeAmount); ;
         SendEvent(lengthData);
         SendEvent(fitMeData);
     }
@@ -66,7 +67,7 @@ public class AnalyticManager : MonoSingleton<AnalyticManager>
         SendEvent(eventData);
     }
 
-    private EventData CreateEventData(EventType eventType, object parameterValue)
+    private EventData CreateEventData(EventType eventType, int parameterValue)
     {
         string eventName = eventNameDictionary[eventType].eventName;
         string parameterName = eventNameDictionary[eventType].parameterName;
@@ -75,7 +76,45 @@ public class AnalyticManager : MonoSingleton<AnalyticManager>
             new()
             {
                 parameterName = parameterName,
-                parameterValue = parameterValue
+                parameterValue = (int)parameterValue
+            }
+        };
+        return new EventData
+        {
+            eventName = eventName,
+            eventParameters = eventParameters
+        };
+    }
+    
+    private EventData CreateEventData(EventType eventType, float parameterValue)
+    {
+        string eventName = eventNameDictionary[eventType].eventName;
+        string parameterName = eventNameDictionary[eventType].parameterName;
+        List<EventParameterData> eventParameters = new List<EventParameterData>
+        {
+            new()
+            {
+                parameterName = parameterName,
+                parameterValue = (float)parameterValue
+            }
+        };
+        return new EventData
+        {
+            eventName = eventName,
+            eventParameters = eventParameters
+        };
+    }
+    
+    private EventData CreateEventData(EventType eventType, string parameterValue)
+    {
+        string eventName = eventNameDictionary[eventType].eventName;
+        string parameterName = eventNameDictionary[eventType].parameterName;
+        List<EventParameterData> eventParameters = new List<EventParameterData>
+        {
+            new()
+            {
+                parameterName = parameterName,
+                parameterValue = (string)parameterValue
             }
         };
         return new EventData
